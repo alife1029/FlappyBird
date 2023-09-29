@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -19,6 +20,18 @@ int main(int argc, char** argv)
 	}
 
 	glfwMakeContextCurrent(window);
+
+	// Load Modern OpenGL
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to load Modern OpenGL!" << std::endl;
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		return -1;
+	}
+
+	// V-Sync
+	glfwSwapInterval(1);
 
 	while (!glfwWindowShouldClose(window))
 	{
