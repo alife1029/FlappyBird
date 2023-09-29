@@ -1,11 +1,11 @@
-add_subdirectory(libs/glfw)
-add_subdirectory(libs/glad)
-add_subdirectory(libs/stb)
+add_subdirectory(vendor/glfw)
+add_subdirectory(vendor/glad)
+add_subdirectory(vendor/stb)
 
-set(INCLUDE_DIRS	libs/glfw/include
-					libs/glad/include
-					libs/glm
-					libs/stb/include
+set(INCLUDE_DIRS	vendor/glfw/include
+					vendor/glad/include
+					vendor/glm
+					vendor/stb/include
 					)
 
 set(LINK_LIBS	glfw
