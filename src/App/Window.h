@@ -7,7 +7,7 @@ struct GLFWwindow;
 class Window
 {
 public:
-	static void CreateWindow(int width, int height, const std::string& title, bool fullScreen = false);
+	static void Create(int width, int height, const std::string& title, bool fullScreen = false);
 	static void SwapBuffers();
 	static void PollEvents();
 	static bool IsOpen();

@@ -12,7 +12,7 @@ bool			Window::s_FullScreen = false,
 				Window::s_GLFWinitialized = false;
 GLFWwindow*		Window::s_WindowHandle = nullptr;
 
-void Window::CreateWindow(int width, int height, const std::string& title, bool fullScreen)
+void Window::Create(int width, int height, const std::string& title, bool fullScreen)
 {
 	if (!s_GLFWinitialized)
 	{
