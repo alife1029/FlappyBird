@@ -26,16 +26,18 @@ int main(int argc, char** argv)
 
 		return 0;
 	}
-	catch (Exception& e)
+	catch (const Exception& e)
 	{
-		MessageBox(NULL, e.what(), e.GetType(), MB_ICONERROR);
+		MessageBoxA(NULL, e.what(), e.GetType(), MB_ICONERROR);
 	}
-	catch (std::exception& e)
+	catch (const std::exception& e)
 	{
-		MessageBox(NULL, e.what(), "Error", MB_ICONERROR);
+		MessageBoxA(NULL, e.what(), "Error", MB_OK | MB_ICONERROR);
 	}
 	catch (...)
 	{
-		MessageBox(NULL, "Something went wrong!", "Unknown Error", MB_ICONERROR);
+		MessageBoxA(NULL, "Something went wrong!", "Unknown Error", MB_OK | MB_ICONERROR);
 	}
+
+	return -1;
 }

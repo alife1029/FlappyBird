@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include <iostream>
+#include <sstream>
 
 #include "../Utils/File.h"
 
@@ -24,18 +25,10 @@ void AttachShader(uint32_t program, const std::string& sourceFile, uint32_t shad
 		char log[log_size];
 		glGetShaderInfoLog(shader, log_size, nullptr, log);
 
-		// TODO: Throw exception
-		std::cout	<< "FAILED TO COMPILE SHADER!\t(SHADER_FILE: " << sourceFile << ")" << std::endl
-					<< "GPU_LOG:\n" << std::endl
-					<< log << std::endl;
-
-		goto deleteshader;
+		throw Shader::CompilationError(__LINE__, __FILE__, sourceFile, shaderType, log);
 	}
 
 	glAttachShader(program, shader);
-	
-	// Cleanup
-deleteshader:
 	glDeleteShader(shader);
 }
 
@@ -57,10 +50,7 @@ Shader::Shader(const std::string& vsFile, const std::string& fsFile)
 		char log[log_size];
 		glGetProgramInfoLog(m_ShaderProgram, log_size, nullptr, log);
 
-		// TODO: Throw exception
-		std::cout	<< "FAILED TO LINK SHADER PROGRAM!" << std::endl
-					<< "GPU_LOG:\n" << std::endl
-					<< log << std::endl;
+		throw LinkageError(__LINE__, __FILE__, vsFile, fsFile, log);
 	}
 }
 
@@ -72,4 +62,41 @@ Shader::~Shader()
 void Shader::Activate() const noexcept
 {
 	glUseProgram(m_ShaderProgram);
+}
+
+const char* Shader::CompilationError::what() const noexcept
+{
+	std::string _shaderType = "Unknown Shader Type";
+	switch (GetShaderType())
+	{
+	case GL_VERTEX_SHADER:
+		_shaderType = "Vertex shader";
+		break;
+	case GL_FRAGMENT_SHADER:
+		_shaderType = "Fragment Shader";
+		break;
+	}
+
+	std::ostringstream oss;
+	oss << GetType() << std::endl 
+		<< "[Shader File] " << GetShaderFile() << std::endl
+		<< "[Shader Type] " << _shaderType << std::endl
+		<< "\n[GPU Log] " << std::endl
+		<< GPULog();
+	m_WhatBuffer = oss.str();
+	return m_WhatBuffer.c_str();
+}
+
+const char* Shader::LinkageError::what() const noexcept
+{
+	std::ostringstream oss;
+
+	oss << GetType() << std::endl
+		<< "[Vertex Shader File] " << GetVSFile() << std::endl
+		<< "[Fragment Shader File] " << GetFSFile() << std::endl
+		<< "\n[GPU Log] " << std::endl
+		<< GetGPULog() << std::endl;
+
+	m_WhatBuffer = oss.str();
+	return m_WhatBuffer.c_str();
 }
