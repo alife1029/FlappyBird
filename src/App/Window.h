@@ -7,29 +7,32 @@ struct GLFWwindow;
 class Window
 {
 public:
-	static void Create(int width, int height, const std::string& title, bool fullScreen = false);
-	static void SwapBuffers();
-	static void PollEvents();
-	static bool IsOpen();
-	static int GetWidth();
-	static int GetHeight();
-	static std::pair<int, int> GetSize();
-	static void SetWidth(int width);
-	static void SetHeight(int height);
-	static void SetSize(int width, int height);
-	static std::string GetTitle();
-	static void SetTitle(const std::string& title);
+	Window(int width, int height, const std::string& title, bool fullScreen = false);
+	Window& operator=(const Window&) = delete;
+	~Window();
+	void SwapBuffers();
+	void PollEvents();
+	bool IsOpen();
+	int GetWidth();
+	int GetHeight();
+	std::pair<int, int> GetSize();
+	void SetWidth(int width);
+	void SetHeight(int height);
+	void SetSize(int width, int height);
+	std::string GetTitle();
+	void SetTitle(const std::string& title);
 
 private:
-	static int			s_Width, 
-						s_Height;
+	int			m_Width, 
+				m_Height;
 
-	static std::string	s_Title;
+	std::string	m_Title;
 
-	static bool			s_FullScreen,
-						s_GLFWinitialized;
+	bool		m_FullScreen;
+	static bool	s_GLFWinitialized,
+				s_GLADinitialized;
 
-	static GLFWwindow*	s_WindowHandle;
+	GLFWwindow*	m_WindowHandle;
 
 private:
 	static void glfw_framebuffer_size_callback(GLFWwindow* window, int width, int height);

@@ -10,16 +10,16 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		Window::Create(1024, 680, "Flappy Bird Game", false);
+		Window window(1024, 680, "Flappy Bird Game", false);
 
 		Shader* shader = new Shader("res/shaders/shader.vert", "res/shaders/shader.frag");
 
-		while (Window::IsOpen())
+		while (window.IsOpen())
 		{
 			shader->Activate();
 
-			Window::SwapBuffers();
-			Window::PollEvents();
+			window.SwapBuffers();
+			window.PollEvents();
 		}
 
 		delete shader;

@@ -5,14 +5,10 @@
 
 #include <iostream>
 
-int				Window::s_Width = 0, 
-				Window::s_Height = 0;
-std::string		Window::s_Title = "";
-bool			Window::s_FullScreen = false,
-				Window::s_GLFWinitialized = false;
-GLFWwindow*		Window::s_WindowHandle = nullptr;
+bool Window::s_GLFWinitialized = false;
+bool Window::s_GLADinitialized = false;
 
-void Window::Create(int width, int height, const std::string& title, bool fullScreen)
+Window::Window(int width, int height, const std::string& title, bool fullScreen)
 {
 	if (!s_GLFWinitialized)
 	{
@@ -26,42 +22,55 @@ void Window::Create(int width, int height, const std::string& title, bool fullSc
 		s_GLFWinitialized = true;
 	}
 
-	s_WindowHandle = glfwCreateWindow(width, height, title.c_str(), fullScreen ? glfwGetPrimaryMonitor() : NULL, NULL);
-	if (!s_WindowHandle)
+	m_WindowHandle = glfwCreateWindow(width, height, title.c_str(), fullScreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+	if (!m_WindowHandle)
 	{
 		// TODO: Throw exception
 		std::cout << "Failed to create GLFW window!" << std::endl;
 		return;
 	}
 
-	glfwMakeContextCurrent(s_WindowHandle);
+	glfwMakeContextCurrent(m_WindowHandle);
 
 	// Load Modern OpenGL
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	if (!s_GLADinitialized)
 	{
-		// TODO: Throw exception
-		std::cout << "Failed to load Modern OpenGL!" << std::endl;
-		glfwDestroyWindow(s_WindowHandle);
-		s_WindowHandle = nullptr;
-		return;
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			// TODO: Throw exception
+			std::cout << "Failed to load Modern OpenGL!" << std::endl;
+			glfwDestroyWindow(m_WindowHandle);
+			m_WindowHandle = nullptr;
+			return;
+		}
+
+		s_GLADinitialized = true;
 	}
 	
 	// V-Sync
 	glfwSwapInterval(1);
 
+	// Set this class as user pointer
+	glfwSetWindowUserPointer(m_WindowHandle, reinterpret_cast<void*>(this));
+
 	// Set window callbacks
-	glfwSetFramebufferSizeCallback(s_WindowHandle, glfw_framebuffer_size_callback);
+	glfwSetFramebufferSizeCallback(m_WindowHandle, glfw_framebuffer_size_callback);
 
 	// Set variables
-	s_Width = width;
-	s_Height = height;
-	s_Title = title;
-	s_FullScreen = fullScreen;
+	m_Width = width;
+	m_Height = height;
+	m_Title = title;
+	m_FullScreen = fullScreen;
+}
+
+Window::~Window()
+{
+	glfwDestroyWindow(m_WindowHandle);
 }
 
 void Window::SwapBuffers()
 {
-	glfwSwapBuffers(s_WindowHandle);
+	glfwSwapBuffers(m_WindowHandle);
 }
 
 void Window::PollEvents()
@@ -71,52 +80,53 @@ void Window::PollEvents()
 
 bool Window::IsOpen()
 {
-	return glfwWindowShouldClose(s_WindowHandle) == 0;
+	return glfwWindowShouldClose(m_WindowHandle) == 0;
 }
 
 int Window::GetWidth()
 {
-	return s_Width;
+	return m_Width;
 }
 
 int Window::GetHeight()
 {
-	return s_Height;
+	return m_Height;
 }
 
 std::pair<int, int> Window::GetSize()
 {
-	return { s_Width, s_Height };
+	return { m_Width, m_Height };
 }
 
 void Window::SetWidth(int width)
 {
-	glfwSetWindowSize(s_WindowHandle, width, s_Height);
+	glfwSetWindowSize(m_WindowHandle, width, m_Height);
 }
 
 void Window::SetHeight(int height)
 {
-	glfwSetWindowSize(s_WindowHandle, s_Width, height);
+	glfwSetWindowSize(m_WindowHandle, m_Width, height);
 }
 
 void Window::SetSize(int width, int height)
 {
-	glfwSetWindowSize(s_WindowHandle, width, height);
+	glfwSetWindowSize(m_WindowHandle, width, height);
 }
 
 void Window::SetTitle(const std::string& title)
 {
-	glfwSetWindowTitle(s_WindowHandle, title.c_str());
-	s_Title = title;
+	glfwSetWindowTitle(m_WindowHandle, title.c_str());
+	m_Title = title;
 }
 
 std::string Window::GetTitle()
 {
-	return s_Title;
+	return m_Title;
 }
 
 void Window::glfw_framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	s_Width = width;
-	s_Height = height;
+	Window* windowObj = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+	windowObj->m_Width = width;
+	windowObj->m_Height = height;
 }
