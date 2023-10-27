@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "../Utils/Exception.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -14,9 +15,7 @@ Window::Window(int width, int height, const std::string& title, bool fullScreen)
 	{
 		if (!glfwInit())
 		{
-			// TODO: Throw exception
-			std::cout << "Failed to initialize GLFW!" << std::endl;
-			return;
+			THROW_INITIALIZATION_EXCEPTION("GLFW");
 		}
 
 		s_GLFWinitialized = true;
@@ -25,9 +24,7 @@ Window::Window(int width, int height, const std::string& title, bool fullScreen)
 	m_WindowHandle = glfwCreateWindow(width, height, title.c_str(), fullScreen ? glfwGetPrimaryMonitor() : NULL, NULL);
 	if (!m_WindowHandle)
 	{
-		// TODO: Throw exception
-		std::cout << "Failed to create GLFW window!" << std::endl;
-		return;
+		THROW_INITIALIZATION_EXCEPTION("Window");
 	}
 
 	glfwMakeContextCurrent(m_WindowHandle);
@@ -37,11 +34,9 @@ Window::Window(int width, int height, const std::string& title, bool fullScreen)
 	{
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
-			// TODO: Throw exception
-			std::cout << "Failed to load Modern OpenGL!" << std::endl;
 			glfwDestroyWindow(m_WindowHandle);
 			m_WindowHandle = nullptr;
-			return;
+			THROW_INITIALIZATION_EXCEPTION("OpenGL");
 		}
 
 		s_GLADinitialized = true;

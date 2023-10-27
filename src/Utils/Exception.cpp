@@ -41,3 +41,27 @@ std::string Exception::GetOriginString() const noexcept
 
 	return oss.str();
 }
+
+InitializationException::InitializationException(int line, const char* file, const std::string& failedInit) noexcept
+	:
+	Exception(line, file),
+	m_ObjectCouldntInitialized(failedInit)
+{}
+
+const char* InitializationException::what() const noexcept
+{
+	std::ostringstream oss;
+
+	oss << GetType() << std::endl
+		<< GetOriginString() << std::endl
+		<< "Failed to initialize " << GetObjectCouldntInitialized() << std::endl;
+
+	m_WhatBuffer = oss.str();
+
+	return m_WhatBuffer.c_str();
+}
+
+const char* InitializationException::GetType() const noexcept
+{
+	return "Initialization Error";
+}
