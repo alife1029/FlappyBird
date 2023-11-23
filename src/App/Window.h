@@ -10,6 +10,7 @@ public:
 	Window(int width, int height, const std::string& title, bool fullScreen = false);
 	Window& operator=(const Window&) = delete;
 	~Window();
+	operator GLFWwindow* ();
 	void SwapBuffers();
 	void PollEvents();
 	bool IsOpen();

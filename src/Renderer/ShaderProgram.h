@@ -50,6 +50,9 @@ public:
 public:
 	Shader(const std::string& vsFile, const std::string& fsFile);
 	~Shader();
+
+	operator uint32_t() { return m_ShaderProgram; }
+
 	void Activate() const noexcept;
 private:
 	uint32_t m_ShaderProgram;

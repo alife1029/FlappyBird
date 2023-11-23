@@ -63,6 +63,11 @@ Window::~Window()
 	glfwDestroyWindow(m_WindowHandle);
 }
 
+Window::operator GLFWwindow* ()
+{
+	return m_WindowHandle;
+}
+
 void Window::SwapBuffers()
 {
 	glfwSwapBuffers(m_WindowHandle);

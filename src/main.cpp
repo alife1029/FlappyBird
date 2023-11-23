@@ -1,10 +1,12 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <Windows.h>
 
 #include "App/Window.h"
+#include "Renderer/OrthographicCamera.h"
 #include "Renderer/ShaderProgram.h"
 #include "Renderer/Texture2D.h"
 #include "Utils/Exception.h"
@@ -13,11 +15,16 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		Window window(1024, 680, "Flappy Bird Game", false);
+		static constexpr int WINDOW_WIDTH = 1024, WINDOW_HEIGHT = 680;
+
+		Window window(WINDOW_WIDTH, WINDOW_HEIGHT, "Flappy Bird Game", false);
 		Shader shader("res/shaders/shader.vert", "res/shaders/shader.frag");
 		Texture2D birdTexture("res/sprites/yellowbird-midflap.png");
 		Texture2D birdUpflap("res/sprites/yellowbird-upflap.png");
 		Texture2D birdDownflap("res/sprites/yellowbird-downflap.png");
+
+		Viewport* gameViewport = new Viewport(WINDOW_WIDTH, WINDOW_HEIGHT);
+		OrthographicCamera camera(gameViewport);
 
 		struct Vertex
 		{
@@ -61,7 +68,19 @@ int main(int argc, char** argv)
 
 		while (window.IsOpen())
 		{
+			camera.SetSize(camera.GetSize() / 1.001f);
+
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			gameViewport->SetWidth(window.GetWidth());
+			gameViewport->SetHeight(window.GetHeight());
+			gameViewport->Apply();
+			camera.Update();			
+
 			shader.Activate();
+
+			glUniformMatrix4fv(glGetUniformLocation(shader, "u_ViewProjMatrix"), 1, GL_FALSE, glm::value_ptr(camera.GetViewProjMatrix()));
 
 			glBindVertexArray(VAO);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
