@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Utils/EngineException.h"
+#include "Engine/Renderer/OpenGLGraphics.h"
 #include <Windows.h>
 
 namespace Engine
@@ -39,7 +40,11 @@ namespace Engine
 		void Show();
 		void Hide();
 
-		HWND GetHWND();
+		int GetWidth() const noexcept;
+		int GetHeight() const noexcept; 
+		std::string GetTitle() const noexcept;
+		OpenGLGraphics* GetGfx() const noexcept;
+		HWND GetHWND() const noexcept;
 
 		void ProcessEvents();
 		void CreateGraphicsContext();
@@ -50,6 +55,7 @@ namespace Engine
 		bool	m_IsFullscreen, 
 				m_IsShown,
 				m_HasFocus;
+		OpenGLGraphics* m_Graphics;
 		HWND hWnd;
 
 	private:

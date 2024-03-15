@@ -1,9 +1,13 @@
+#include "engine_pch.h"
+
 #include "App.h"
 #include "Engine/Utils/Time.h"
 
 namespace Engine
 {
 	App::App() 
+		:
+		m_Window(nullptr)
 	{
 		
 	}

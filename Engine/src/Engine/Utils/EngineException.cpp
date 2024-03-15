@@ -1,8 +1,6 @@
 #include "engine_pch.h"
 #include "EngineException.h"
 
-#include <sstream>
-
 namespace Engine
 {
 	EngineException::EngineException(int line, const char* file) noexcept

@@ -1,7 +1,7 @@
+#include "engine_pch.h"
+
 #include "Window.h"
 #include "Engine/App/AppManager.h"
-
-#include <sstream>
 
 #define	ENGINE_WND_EXCEPT(hr) Engine::Window::HrException(__LINE__, __FILE__, hr)
 #define ENGINE_WND_LASTEXCEPT() Engine::Window::HrException(__LINE__, __FILE__, GetLastError())
@@ -131,7 +131,23 @@ namespace Engine
 		}
 		m_IsShown = false;
 	}
-	HWND Window::GetHWND()
+	int Window::GetWidth() const noexcept
+	{
+		return m_Width;
+	}
+	int Window::GetHeight() const noexcept
+	{
+		return m_Height;
+	}
+	std::string Window::GetTitle() const noexcept
+	{
+		return m_title;
+	}
+	OpenGLGraphics* Window::GetGfx() const noexcept
+	{
+		return m_Graphics;
+	}
+	HWND Window::GetHWND() const noexcept
 	{
 		return hWnd;
 	}
@@ -154,7 +170,7 @@ namespace Engine
 
 	void Window::CreateGraphicsContext()
 	{
-		// TODO: Create OpenGL Graphics Context
+		m_Graphics = new OpenGLGraphics(this);
 	}
 
 	LRESULT Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept

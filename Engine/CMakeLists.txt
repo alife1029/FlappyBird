@@ -21,5 +21,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE	vendor/glad/include
 													vendor/glm
 													src/)
 target_link_libraries(${PROJECT_NAME} PRIVATE	glad 
-												stb)
+												stb
+												opengl32)
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/engine_pch.h)
