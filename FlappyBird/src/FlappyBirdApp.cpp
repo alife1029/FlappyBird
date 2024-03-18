@@ -2,7 +2,7 @@
 
 FlappyBirdApp::FlappyBirdApp()
 {
-	m_Window = new Engine::Window(1024, 720, "Flappy Bird", false);
+	m_Window = new Engine::Window(640, 480, "Flappy Bird", false);
 }
 
 FlappyBirdApp::~FlappyBirdApp()

@@ -60,7 +60,7 @@ namespace Engine
 #pragma region Window
 	Window::Window(int width, int height, const std::string& title, bool fullScreen)
 		:
-		m_Width(width), m_Height(height), m_title(title), m_IsFullscreen(fullScreen)
+		m_Width(width), m_Height(height), m_title(title), m_IsFullscreen(fullScreen), m_Graphics(nullptr), m_HasFocus(false), m_IsShown(false)
 	{
 		constexpr DWORD windowStyle = WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX | WS_SYSMENU | CS_OWNDC;
 
