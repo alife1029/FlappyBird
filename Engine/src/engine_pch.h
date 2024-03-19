@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <fstream>
+#include <regex>
 
 #include <Windows.h>
 

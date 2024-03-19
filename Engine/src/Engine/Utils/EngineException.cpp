@@ -78,4 +78,27 @@ namespace Engine
 			<< L"[Line] " << m_Line;
 		return wos.str();
 	}
+
+	ResourceNotFoundException::ResourceNotFoundException(int line, const char* file, const std::string& path)
+		:
+		EngineException(line, file), m_NotFoundPath(path)
+	{
+	}
+	const char* ResourceNotFoundException::what() const noexcept
+	{
+		std::ostringstream oss;
+		oss << GetType() << std::endl
+			<< "[Missing File ]" << GetNotFoundPath()
+			<< GetOriginString();
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+	const char* ResourceNotFoundException::GetType() const noexcept
+	{
+		return "Resource Not Found";
+	}
+	std::string ResourceNotFoundException::GetNotFoundPath() const noexcept
+	{
+		return m_NotFoundPath;
+	}
 }

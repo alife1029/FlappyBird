@@ -41,4 +41,17 @@ namespace Engine
 	protected:
 		mutable std::wstring m_WhatBuffer;
 	};
+
+	class ResourceNotFoundException : public EngineException
+	{
+	public:
+		ResourceNotFoundException(int line, const char* file, const std::string& path);
+		const char* what() const noexcept override;
+		virtual const char* GetType() const noexcept;
+
+		std::string GetNotFoundPath() const noexcept;
+
+	private:
+		std::string m_NotFoundPath;
+	};
 }
