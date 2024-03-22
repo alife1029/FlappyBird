@@ -2,14 +2,19 @@
 
 FlappyBirdApp::FlappyBirdApp()
 	:
-	m_Shader(nullptr), m_Renderer(nullptr), m_Viewport(nullptr), m_Camera(nullptr), m_BackgroundTexture(nullptr), m_Character(nullptr)
+	m_Shader(nullptr), m_Renderer(nullptr), m_Viewport(nullptr), m_Camera(nullptr), m_BackgroundTexture(nullptr)
 {
 	m_Window = new Engine::Window(800, 600, "Flappy Bird", false);
 }
 
 FlappyBirdApp::~FlappyBirdApp()
 {
-	delete m_Character;
+	for (Engine::Texture2D* charTex : m_CharacterTextures)
+	{
+		delete charTex;
+	}
+	m_CharacterTextures = {};
+
 	delete m_BackgroundTexture;
 	delete m_Camera;
 	delete m_Viewport;
@@ -22,6 +27,8 @@ void FlappyBirdApp::Start()
 {
 	App::Start();
 
+	Engine::Input::SetupEventWindow(m_Window);
+
 	m_Window->Show();
 	m_Window->CreateGraphicsContext();
 
@@ -31,12 +38,25 @@ void FlappyBirdApp::Start()
 	m_Camera = new Engine::Camera(m_Viewport);
 	m_Camera->zNear = 0.0f;
 	m_BackgroundTexture = new Engine::Texture2D("res/sprites/background-day.png");
-	m_Character = new Engine::Texture2D("res/sprites/yellowbird-midflap.png");
+	m_CharacterTextures = {
+		new Engine::Texture2D("res/sprites/yellowbird-downflap.png"),
+		new Engine::Texture2D("res/sprites/yellowbird-midflap.png"),
+		new Engine::Texture2D("res/sprites/yellowbird-upflap.png"),
+	};
 }
 
 void FlappyBirdApp::Update()
 {
 	App::Update();
+
+	// Game logic update
+	m_BirdPosition += m_BirdVelocity * Engine::Time::Delta();
+	m_BirdVelocity.y -= 9.807f * Engine::Time::Delta();
+	if (Engine::Input::IsKeyPressed(Engine::Key::Space))
+	{
+		m_BirdVelocity.y = 4.0f;
+	}
+	m_BirdRotationZ = 45.0f * m_BirdVelocity.y / 10.0f;
 
 	m_Camera->Update();
 
@@ -44,7 +64,7 @@ void FlappyBirdApp::Update()
 
 	m_Renderer->Begin(m_Camera->GetCombinedMatrix());
 	m_Renderer->DrawTexture(m_BackgroundTexture, { 0.0f, 0.0f, 0.0f });
-	m_Renderer->DrawTexture(m_Character, { 0.0f, 0.0f, 0.0f });
+	m_Renderer->DrawTexture(m_CharacterTextures[static_cast<size_t>(m_ElapsedTime * 8.0f) % 3], m_BirdPosition, m_BirdRotationZ);
 	m_Renderer->End();
 
 	m_Window->GetGfx()->EndFrame();
