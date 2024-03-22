@@ -2,6 +2,7 @@
 
 #include "Engine/Utils/EngineException.h"
 #include "Engine/Renderer/OpenGLGraphics.h"
+#include "Engine/Input/Keyboard.h"
 #include <Windows.h>
 
 namespace Engine
@@ -9,6 +10,7 @@ namespace Engine
 	class Window
 	{
 		friend class Win32WindowClass;
+		friend class Input;
 	public:
 		class Exception : public EngineException
 		{
@@ -56,6 +58,7 @@ namespace Engine
 				m_IsShown,
 				m_HasFocus;
 		OpenGLGraphics* m_Graphics;
+		Keyboard m_Keyboard;
 		HWND hWnd;
 
 	private:

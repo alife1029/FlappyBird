@@ -13,7 +13,9 @@ file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
 									src/Engine/Renderer/**.h
 									src/Engine/Renderer/**.cpp
 									src/Engine/Utils/**.h
-									src/Engine/Utils/**.cpp)
+									src/Engine/Utils/**.cpp
+									src/Engine/Input/**.h
+									src/Engine/Input/**.cpp)
 
 add_library(${PROJECT_NAME} ${ENGINE_PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE	vendor/glad/include

@@ -217,6 +217,24 @@ namespace Engine
 			m_Height = wndRect.bottom - wndRect.top;
 			break;
 
+
+		/************* KEYBOARD MESSAGES *************/
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+			if (!(lParam & 0x40000000) || m_Keyboard.IsAutorepeatEnabled())
+				m_Keyboard.OnKeyPress(static_cast<unsigned char>(wParam));
+			break;
+
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+			m_Keyboard.OnKeyRelease(static_cast<unsigned char>(wParam));
+			break;
+
+		case WM_CHAR:
+			m_Keyboard.OnChar(static_cast<char>(wParam));
+			break;
+		/*********** END KEYBOARD MESSAGES ***********/
+
 		default:
 			break;
 		}
