@@ -24,3 +24,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE	glad
 												stb
 												opengl32)
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/engine_pch.h)
+
+# Post Build Commands
+add_custom_command(	TARGET ${PROJECT_NAME} POST_BUILD
+					COMMAND ${CMAKE_COMMAND} -E copy_directory
+					${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/res/
+					${CMAKE_BINARY_DIR}/${PROJECT_NAME}/res/
+					)

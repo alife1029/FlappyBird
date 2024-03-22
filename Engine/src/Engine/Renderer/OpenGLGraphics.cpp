@@ -57,6 +57,10 @@ namespace Engine
 		// Enable V-Sync
 		wglSwapIntervalEXT(1);
 
+		// Enable alpha blending
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		std::cout << "OpenGL Version: " << GLVersion.major << "." << GLVersion.minor << std::endl;
 	}
 

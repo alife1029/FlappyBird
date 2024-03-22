@@ -22,6 +22,8 @@ namespace Engine
 		glm::vec3 Position{ 0.0f };
 		float Rotation = 0.0f;
 		float Size = 5.0f;
+		float zNear = 1.0f;
+		float zFar = 100.0f;
 
 	private:
 		glm::mat4	m_View,

@@ -1,8 +1,6 @@
 #include "engine_pch.h"
 #include "Camera.h"
 
-#include <glm/gtc/matrix_transform.hpp>
-
 namespace Engine
 {
 	Camera::Camera(Viewport* viewport)
@@ -16,8 +14,8 @@ namespace Engine
 		m_View = glm::translate(glm::rotate(glm::mat4(1.0f), -glm::radians(Rotation), { 0.0f, 0.0f, 1.0f }), -Position);
 		m_Projection = glm::ortho(	Size * m_Viewport->GetAspectRatio() / -2.0f, 
 									Size * m_Viewport->GetAspectRatio() / 2.0f, 
-									Size / -2.0f, 
-									Size / 2.0f);
+									Size / -2.0f, Size / 2.0f,
+									zNear, zFar);
 		m_Combined = m_Projection * m_View;
 	}
 

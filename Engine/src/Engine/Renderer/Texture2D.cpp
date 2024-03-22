@@ -1,5 +1,6 @@
 #include "engine_pch.h"
 #include "Texture2D.h"
+#include "Engine/Utils/EngineException.h"
 
 namespace Engine
 {
@@ -23,9 +24,16 @@ namespace Engine
 		stbi_set_flip_vertically_on_load(true);
 		unsigned char* pixels = stbi_load(imageFile.c_str(), &m_Width, &m_Height, &m_ChannelCount, desiredChannelCount);
 
+		if (!pixels)
+		{
+			// Image not loaded
+			throw ResourceNotFoundException(__LINE__, __FILE__, imageFile);
+		}
+
 		GenerateTextureFromBytes(pixels, m_Width, m_Height, m_ChannelCount, filter, wrap);
 
 		stbi_image_free(pixels);
+		m_PixelPerUnit = pixelPerUnit;
 	}
 
 	Texture2D::~Texture2D()
@@ -73,31 +81,25 @@ namespace Engine
 	}
 	void Texture2D::ChangeFilterMode(Filter f) noexcept
 	{
-		if (m_Filter != f)
-		{
-			constexpr GLint filterIDs[] = { GL_NEAREST, GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR };
+		constexpr GLint filterIDs[] = { GL_NEAREST, GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR };
 			
-			Bind();
+		Bind();
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterIDs[static_cast<int>(f)]);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterIDs[static_cast<int>(f)]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterIDs[static_cast<int>(f)]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterIDs[static_cast<int>(f)]);
 			
-			m_Filter = f;
-		}
+		m_Filter = f;
 	}
 	void Texture2D::ChangeWrapMode(Wrap w) noexcept
 	{
-		if (m_Wrap != w)
-		{
-			constexpr GLint wrapIDs[] = { GL_REPEAT, GL_CLAMP_TO_EDGE };
+		constexpr GLint wrapIDs[] = { GL_REPEAT, GL_CLAMP_TO_EDGE };
 
-			Bind();
+		Bind();
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapIDs[static_cast<int>(w)]);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapIDs[static_cast<int>(w)]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapIDs[static_cast<int>(w)]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapIDs[static_cast<int>(w)]);
 
-			m_Wrap = w;
-		}
+		m_Wrap = w;
 	}
 
 	void Texture2D::GenerateTextureFromBytes(unsigned char* pixels, int w, int h, int ch, Filter f, Wrap wrp)

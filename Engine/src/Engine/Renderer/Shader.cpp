@@ -2,8 +2,6 @@
 #include "Shader.h"
 #include "Engine/Utils/File.h"
 
-#include <glm/gtc/type_ptr.hpp>
-
 #define PARAMETER_UNIFORM_1N glGetUniformLocation(m_ProgramID, varName.c_str()), value
 #define PARAMETER_UNIFORM_2N glGetUniformLocation(m_ProgramID, varName.c_str()), value.x, value.y
 #define PARAMETER_UNIFORM_3N PARAMETER_UNIFORM_2N, value.z

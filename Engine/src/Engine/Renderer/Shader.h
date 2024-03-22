@@ -5,6 +5,8 @@
 #include <string>
 #include <cstdint>
 
+#include <glm/glm.hpp>
+
 namespace Engine
 {
 	class Shader
