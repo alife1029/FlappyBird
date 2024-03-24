@@ -155,8 +155,8 @@ namespace Engine
 		}
 
 		// Initial vertex data
-		float right = texture->GetWidth() / 2.0f / texture->PixelPerUnit();
-		float top = texture->GetHeight() / 2.0f / texture->PixelPerUnit();
+		float right = ((float)texture->GetWidth() / texture->PixelPerUnit()) / 2.0f;
+		float top = ((float)texture->GetHeight() / texture->PixelPerUnit()) / 2.0f;
 		glm::vec4 vertexPoses[] = {
 			{ -right, -top, 0.0f, 1.0f },
 			{  right, -top, 0.0f, 1.0f },

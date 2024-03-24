@@ -2,6 +2,8 @@
 
 #include <Engine.h>
 
+#include "Background.h"
+
 class FlappyBirdApp : public Engine::App
 {
 public:
@@ -18,6 +20,8 @@ private:
 	Engine::Texture2D* m_BackgroundTexture;
 	std::vector<Engine::Texture2D*>	m_CharacterTextures;
 	float m_ElapsedTime = 0.0f;
+
+	Background* m_Bg;
 	
 	glm::vec3 m_BirdPosition{ 0.0f };
 	glm::vec3 m_BirdVelocity{ 0.0f };
