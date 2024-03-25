@@ -1,4 +1,6 @@
 #include "FlappyBirdApp.h"
+#include <ctime>
+#include <cstdlib>
 
 using namespace Engine;
 using namespace glm;
@@ -20,10 +22,14 @@ FlappyBirdApp::~FlappyBirdApp()
 	m_CharacterTextures = {};
 
 	delete m_BackgroundTexture;
+	delete m_PipeTexture;
+
 	delete m_Camera;
 	delete m_Viewport;
+
 	delete m_Shader;
 	delete m_Renderer;
+
 	delete m_Window;
 }
 
@@ -44,6 +50,7 @@ void FlappyBirdApp::Start()
 
 	// Loading textures
 	m_BackgroundTexture = new Texture2D("res/sprites/background-day.png");
+	m_PipeTexture = new Texture2D("res/sprites/pipe-green.png");
 	m_CharacterTextures = {
 		new Texture2D("res/sprites/yellowbird-downflap.png"),
 		new Texture2D("res/sprites/yellowbird-midflap.png"),
@@ -52,6 +59,21 @@ void FlappyBirdApp::Start()
 
 	m_Bg = new Background(m_BackgroundTexture, { -1.0f, 0.0f, 0.0f });
 	m_Bird = new Bird(&m_CharacterTextures[0]);
+
+	m_Pipes = {
+		new Pipe(m_PipeTexture, 5.0f,  { -1.0f, 0.0f, 0.0f }),
+		new Pipe(m_PipeTexture, 7.0f,  { -1.0f, 0.0f, 0.0f }),
+		new Pipe(m_PipeTexture, 9.0f,  { -1.0f, 0.0f, 0.0f }),
+		new Pipe(m_PipeTexture, 11.0f, { -1.0f, 0.0f, 0.0f }),
+		new Pipe(m_PipeTexture, 13.0f, { -1.0f, 0.0f, 0.0f }),
+		new Pipe(m_PipeTexture, 15.0f, { -1.0f, 0.0f, 0.0f }),
+		new Pipe(m_PipeTexture, 17.0f, { -1.0f, 0.0f, 0.0f }),
+		new Pipe(m_PipeTexture, 19.0f, { -1.0f, 0.0f, 0.0f }),
+		new Pipe(m_PipeTexture, 21.0f, { -1.0f, 0.0f, 0.0f })
+	};
+
+	// Random seed
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
 void FlappyBirdApp::Update()
@@ -61,6 +83,8 @@ void FlappyBirdApp::Update()
 	// Game logic update
 	m_Bg->Update();
 	m_Bird->Update(m_ElapsedTime);
+	for (Pipe* pipe : m_Pipes)
+		pipe->Update();
 
 	m_Camera->Update();
 
@@ -70,6 +94,8 @@ void FlappyBirdApp::Update()
 	m_Renderer->Begin(m_Camera->GetCombinedMatrix());
 	m_Bg->Render(m_Renderer);
 	m_Bird->Render(m_Renderer);
+	for (Pipe* pipe : m_Pipes)
+		pipe->Render(m_Renderer);
 	m_Renderer->End();
 
 	m_Window->GetGfx()->EndFrame();

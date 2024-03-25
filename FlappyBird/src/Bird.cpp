@@ -19,7 +19,7 @@ void Bird::Update(float timeElapsed)
 
 	if (Input::IsKeyJustPressed(Key::Space))
 	{
-		m_Velocity.y = 3.75f;
+		m_Velocity.y = 3.35f;
 	}
 
 	m_Rotation = 45.0f * m_Velocity.y / 10.0f;

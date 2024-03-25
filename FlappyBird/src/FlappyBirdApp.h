@@ -4,6 +4,7 @@
 
 #include "Background.h"
 #include "Bird.h"
+#include "Pipe.h"
 
 class FlappyBirdApp : public Engine::App
 {
@@ -18,10 +19,12 @@ private:
 	Engine::BatchRenderer* m_Renderer;
 	Engine::Viewport* m_Viewport;
 	Engine::Camera* m_Camera;
-	Engine::Texture2D* m_BackgroundTexture;
+	Engine::Texture2D	*m_BackgroundTexture,
+						*m_PipeTexture;
 	std::vector<Engine::Texture2D*>	m_CharacterTextures;
 	float m_ElapsedTime = 0.0f;
 
 	Background* m_Bg;
 	Bird* m_Bird;
+	std::vector<Pipe*> m_Pipes;
 };
