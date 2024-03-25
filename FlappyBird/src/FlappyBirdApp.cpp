@@ -57,9 +57,9 @@ void FlappyBirdApp::Update()
 	// Game logic update
 	m_BirdPosition += m_BirdVelocity * Time::Delta();
 	m_BirdVelocity.y -= 9.807f * Time::Delta();
-	if (Input::IsKeyPressed(Key::Space))
+	if (Input::IsKeyJustPressed(Key::Space))
 	{
-		m_BirdVelocity.y = 4.0f;
+		m_BirdVelocity.y = 3.75f;
 	}
 	m_BirdRotationZ = 45.0f * m_BirdVelocity.y / 10.0f;
 	m_Bg->Update();

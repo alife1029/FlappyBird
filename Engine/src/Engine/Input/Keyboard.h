@@ -33,6 +33,7 @@ namespace Engine
 		Keyboard& operator=(const Keyboard&) = delete;
 
 		bool IsKeyPressed(unsigned char keycode) const noexcept;
+		bool IsKeyJustPressed(unsigned char keycode) const noexcept;
 		char ReadChar() noexcept;
 
 		void EnableAutorepeat() noexcept;
@@ -63,6 +64,7 @@ namespace Engine
 		static constexpr unsigned int s_BufferSize = 16u;
 		bool m_AutorepeatEnabled = false;
 		std::bitset<s_KeyCount> m_KeyStates;
+		std::bitset<s_KeyCount> m_LastStates;
 		std::queue<Event> m_KeyBuffer;
 		std::queue<char> m_CharBuffer;
 	};

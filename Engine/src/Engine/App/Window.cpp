@@ -154,6 +154,8 @@ namespace Engine
 
 	void Window::ProcessEvents()
 	{
+		m_Keyboard.Flush();
+
 		MSG msg;
 
 		while (PeekMessage(&msg, hWnd, NULL, NULL, PM_REMOVE) > 0)

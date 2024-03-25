@@ -34,6 +34,10 @@ namespace Engine
 	{
 		return m_KeyStates[keycode];
 	}
+	bool Keyboard::IsKeyJustPressed(unsigned char keycode) const noexcept
+	{
+		return m_KeyStates[keycode] && !m_LastStates[keycode];
+	}
 	Keyboard::Event Keyboard::ReadKey() noexcept
 	{
 		if (m_KeyBuffer.size() > 0)
@@ -51,6 +55,7 @@ namespace Engine
 	}
 	void Keyboard::FlushKey() noexcept
 	{
+		m_LastStates = m_KeyStates;
 		m_KeyBuffer = std::queue<Event>();
 	}
 
@@ -114,5 +119,6 @@ namespace Engine
 	void Keyboard::ClearState() noexcept
 	{
 		m_KeyStates.reset();
+		m_LastStates.reset();
 	}
 }

@@ -14,6 +14,16 @@ namespace Engine
 	{
 		return s_EventWindow->m_Keyboard.IsKeyPressed(key);
 	}
+
+	bool Input::IsKeyJustPressed(Key key) noexcept
+	{
+		return s_EventWindow->m_Keyboard.IsKeyJustPressed(static_cast<unsigned char>(key));
+	}
+
+	bool Input::IsKeyJustPressed(unsigned char key) noexcept
+	{
+		return s_EventWindow->m_Keyboard.IsKeyJustPressed(key);
+	}
 	
 	std::vector<unsigned char> Input::GetPressingKeys() noexcept
 	{
