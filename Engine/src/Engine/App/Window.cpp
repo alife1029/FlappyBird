@@ -33,8 +33,8 @@ namespace Engine
 			wc.cbClsExtra = 0;
 			wc.cbWndExtra = 0;
 			wc.hInstance = GetInstance();
-			wc.hIcon = nullptr;
-			wc.hIconSm = nullptr;
+			wc.hIcon = LoadIcon(GetInstance(), MAKEINTRESOURCE(101));
+			wc.hIconSm = LoadIcon(GetInstance(), MAKEINTRESOURCE(IDI_APPLICATION));
 			wc.hCursor = nullptr;
 			wc.hbrBackground = nullptr;
 			wc.lpszMenuName = nullptr;

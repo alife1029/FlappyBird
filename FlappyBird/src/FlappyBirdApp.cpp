@@ -8,28 +8,30 @@ using namespace glm;
 FlappyBirdApp::FlappyBirdApp()
 	:
 	m_Shader(nullptr), m_Renderer(nullptr), m_Viewport(nullptr), m_Camera(nullptr), m_BackgroundTexture(nullptr), m_Bg(nullptr), 
-	m_Bird(nullptr)
+	m_Bird(nullptr), m_PipeTexture(nullptr)
 {
 	m_Window = new Window(800, 600, "Flappy Bird", false);
 }
 
 FlappyBirdApp::~FlappyBirdApp()
 {
-	for (Texture2D* charTex : m_CharacterTextures)
-	{
-		delete charTex;
-	}
-	m_CharacterTextures = {};
+	// Delete game objects
+	delete m_Bg;
+	delete m_Bird;
+	for (auto p : m_Pipes) delete p;
+	m_Pipes = {};
 
+	// Delete textures
+	for (auto charTex : m_CharacterTextures) delete charTex;
+	m_CharacterTextures = {};
 	delete m_BackgroundTexture;
 	delete m_PipeTexture;
 
+	// Delete rendering components
 	delete m_Camera;
 	delete m_Viewport;
-
 	delete m_Shader;
 	delete m_Renderer;
-
 	delete m_Window;
 }
 
@@ -42,6 +44,7 @@ void FlappyBirdApp::Start()
 	m_Window->Show();
 	m_Window->CreateGraphicsContext();
 
+	// Create rendering components
 	m_Shader = new Shader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
 	m_Renderer = new BatchRenderer(m_Shader);
 	m_Viewport = new Viewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
@@ -57,9 +60,9 @@ void FlappyBirdApp::Start()
 		new Texture2D("res/sprites/yellowbird-upflap.png"),
 	};
 
+	// Create game objects
 	m_Bg = new Background(m_BackgroundTexture, { -1.0f, 0.0f, 0.0f });
 	m_Bird = new Bird(&m_CharacterTextures[0]);
-
 	m_Pipes = {
 		new Pipe(m_PipeTexture, 5.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
 		new Pipe(m_PipeTexture, 7.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
@@ -75,7 +78,7 @@ void FlappyBirdApp::Start()
 	// Random seed
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
-
+  
 void FlappyBirdApp::Update()
 {
 	App::Update();
