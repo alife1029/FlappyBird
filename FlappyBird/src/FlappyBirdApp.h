@@ -3,6 +3,7 @@
 #include <Engine.h>
 
 #include "Background.h"
+#include "Bird.h"
 
 class FlappyBirdApp : public Engine::App
 {
@@ -22,8 +23,5 @@ private:
 	float m_ElapsedTime = 0.0f;
 
 	Background* m_Bg;
-	
-	glm::vec3 m_BirdPosition{ 0.0f };
-	glm::vec3 m_BirdVelocity{ 0.0f };
-	float m_BirdRotationZ = 0.0f;
+	Bird* m_Bird;
 };

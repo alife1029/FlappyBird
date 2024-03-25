@@ -5,7 +5,8 @@ using namespace glm;
 
 FlappyBirdApp::FlappyBirdApp()
 	:
-	m_Shader(nullptr), m_Renderer(nullptr), m_Viewport(nullptr), m_Camera(nullptr), m_BackgroundTexture(nullptr), m_Bg(nullptr)
+	m_Shader(nullptr), m_Renderer(nullptr), m_Viewport(nullptr), m_Camera(nullptr), m_BackgroundTexture(nullptr), m_Bg(nullptr), 
+	m_Bird(nullptr)
 {
 	m_Window = new Window(800, 600, "Flappy Bird", false);
 }
@@ -40,6 +41,8 @@ void FlappyBirdApp::Start()
 	m_Viewport = new Viewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	m_Camera = new Camera(m_Viewport);
 	m_Camera->zNear = 0.0f;
+
+	// Loading textures
 	m_BackgroundTexture = new Texture2D("res/sprites/background-day.png");
 	m_CharacterTextures = {
 		new Texture2D("res/sprites/yellowbird-downflap.png"),
@@ -48,6 +51,7 @@ void FlappyBirdApp::Start()
 	};
 
 	m_Bg = new Background(m_BackgroundTexture, { -1.0f, 0.0f, 0.0f });
+	m_Bird = new Bird(&m_CharacterTextures[0]);
 }
 
 void FlappyBirdApp::Update()
@@ -55,22 +59,17 @@ void FlappyBirdApp::Update()
 	App::Update();
 
 	// Game logic update
-	m_BirdPosition += m_BirdVelocity * Time::Delta();
-	m_BirdVelocity.y -= 9.807f * Time::Delta();
-	if (Input::IsKeyJustPressed(Key::Space))
-	{
-		m_BirdVelocity.y = 3.75f;
-	}
-	m_BirdRotationZ = 45.0f * m_BirdVelocity.y / 10.0f;
 	m_Bg->Update();
+	m_Bird->Update(m_ElapsedTime);
 
 	m_Camera->Update();
 
+	// Render game
 	m_Window->GetGfx()->ClearBuffer(0.0f, 0.0f, 0.0f, 1.0f);
 
 	m_Renderer->Begin(m_Camera->GetCombinedMatrix());
 	m_Bg->Render(m_Renderer);
-	m_Renderer->DrawTexture(m_CharacterTextures[static_cast<size_t>(m_ElapsedTime * 8.0f) % 3], m_BirdPosition, m_BirdRotationZ);
+	m_Bird->Render(m_Renderer);
 	m_Renderer->End();
 
 	m_Window->GetGfx()->EndFrame();
