@@ -61,15 +61,15 @@ void FlappyBirdApp::Start()
 	m_Bird = new Bird(&m_CharacterTextures[0]);
 
 	m_Pipes = {
-		new Pipe(m_PipeTexture, 5.0f,  { -1.0f, 0.0f, 0.0f }),
-		new Pipe(m_PipeTexture, 7.0f,  { -1.0f, 0.0f, 0.0f }),
-		new Pipe(m_PipeTexture, 9.0f,  { -1.0f, 0.0f, 0.0f }),
-		new Pipe(m_PipeTexture, 11.0f, { -1.0f, 0.0f, 0.0f }),
-		new Pipe(m_PipeTexture, 13.0f, { -1.0f, 0.0f, 0.0f }),
-		new Pipe(m_PipeTexture, 15.0f, { -1.0f, 0.0f, 0.0f }),
-		new Pipe(m_PipeTexture, 17.0f, { -1.0f, 0.0f, 0.0f }),
-		new Pipe(m_PipeTexture, 19.0f, { -1.0f, 0.0f, 0.0f }),
-		new Pipe(m_PipeTexture, 21.0f, { -1.0f, 0.0f, 0.0f })
+		new Pipe(m_PipeTexture, 5.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
+		new Pipe(m_PipeTexture, 7.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
+		new Pipe(m_PipeTexture, 9.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
+		new Pipe(m_PipeTexture, 11.0f, { -1.0f, 0.0f, 0.0f }, m_Bird),
+		new Pipe(m_PipeTexture, 13.0f, { -1.0f, 0.0f, 0.0f }, m_Bird),
+		new Pipe(m_PipeTexture, 15.0f, { -1.0f, 0.0f, 0.0f }, m_Bird),
+		new Pipe(m_PipeTexture, 17.0f, { -1.0f, 0.0f, 0.0f }, m_Bird),
+		new Pipe(m_PipeTexture, 19.0f, { -1.0f, 0.0f, 0.0f }, m_Bird),
+		new Pipe(m_PipeTexture, 21.0f, { -1.0f, 0.0f, 0.0f }, m_Bird)
 	};
 
 	// Random seed
