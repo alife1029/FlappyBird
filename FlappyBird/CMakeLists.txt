@@ -8,7 +8,8 @@ file(GLOB FLAPPY_PROJECT_SOURCES	src/**.h
 
 add_executable(${PROJECT_NAME} WIN32 ${FLAPPY_PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE	../Engine/src
-													../Engine/vendor/glm)
+													../Engine/vendor/glm
+													../Engine/vendor/imgui)
 target_link_libraries(${PROJECT_NAME} PRIVATE Engine opengl32)
 
 # Post Build Commands

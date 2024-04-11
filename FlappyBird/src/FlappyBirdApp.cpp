@@ -15,6 +15,9 @@ FlappyBirdApp::FlappyBirdApp()
 
 FlappyBirdApp::~FlappyBirdApp()
 {
+	// Shutdown ImGui
+	ImGuiManager::Shutdown();
+
 	// Delete game objects
 	delete m_Bg;
 	delete m_Bird;
@@ -48,6 +51,9 @@ void FlappyBirdApp::Start()
 
 	m_Window->Show();
 	m_Window->CreateGraphicsContext();
+
+	// Initialize ImGui
+	ImGuiManager::Initialize(m_Window);
 
 	// Create rendering components
 	m_Shader = new Shader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
@@ -113,13 +119,24 @@ void FlappyBirdApp::Update()
 	m_Renderer->End();
 
 	m_TextRenderer->Begin({ m_Window->GetWidth(), m_Window->GetHeight() });
-	//m_TextRenderer->Draw(m_Righteous, "ABCDEFGHIJKLMN ", { 150, 150 }, 72.0f, { 1.0f, 1.0f, 1.0f, 1.0f });
-	m_TextRenderer->DrawChar(m_Righteous, 'A', { 0, 0 }, 75.0f);
-	m_TextRenderer->DrawChar(m_PixelifySans, 'D', { 100, 100 }, 75.0f);
-	m_TextRenderer->Draw(m_Righteous, "Hello World", { 300, 300 }, 36.0f);
-	m_TextRenderer->Draw(m_Righteous, "A B", { 25, 500 }, 36.0f);
 	m_TextRenderer->Draw(m_Righteous, "HELLO FLAPPY BIRD C++", { 25, 400 }, 36.0f);
  	m_TextRenderer->End();
+
+	// ImGui
+	ImGuiManager::NewFrame();
+	ImGui::Begin("Stats");
+	ImGui::Text("FPS: %g (%g ms)", 1.0f / Time::Delta(), 1000.0f * Time::Delta());
+
+	// Update FPS plot
+	for (int i = 1; i < std::size(m_FpsHistory); i++)
+	{
+		m_FpsHistory[i - 1] = m_FpsHistory[i];
+	}
+	m_FpsHistory[std::size(m_FpsHistory) - 1] = 1.0f / Time::Delta();
+	ImGui::PlotLines("FPS", m_FpsHistory, std::size(m_FpsHistory));
+
+	ImGui::End();
+	ImGuiManager::EndFrame();
 
 	m_Window->GetGfx()->EndFrame();
 	m_Window->ProcessEvents();

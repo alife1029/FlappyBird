@@ -5,6 +5,7 @@ project(Engine VERSION 0.0.1)
 # Libraries
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/stb)
+add_subdirectory(vendor/imgui)
 
 # Source files
 file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
@@ -24,11 +25,13 @@ target_include_directories(${PROJECT_NAME} PRIVATE	vendor/glad/include
 													vendor/stb/include
 													vendor/glm
 													vendor/freetype/include
+													vendor/imgui
 													src/)
 target_link_directories(${PROJECT_NAME} PRIVATE	vendor/freetype/lib)
 target_link_libraries(${PROJECT_NAME} PRIVATE	glad 
 												stb
 												opengl32
+												imgui
 												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/freetype/lib/freetype.lib)
 												
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/engine_pch.h)

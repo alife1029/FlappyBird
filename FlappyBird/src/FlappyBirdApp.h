@@ -31,4 +31,6 @@ private:
 	Background* m_Bg;
 	Bird* m_Bird;
 	std::vector<Pipe*> m_Pipes;
+
+	float m_FpsHistory[500]{ 0 };
 };

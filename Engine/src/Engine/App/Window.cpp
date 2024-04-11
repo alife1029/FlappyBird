@@ -3,8 +3,13 @@
 #include "Window.h"
 #include "Engine/App/AppManager.h"
 
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+
 #define	ENGINE_WND_EXCEPT(hr) Engine::Window::HrException(__LINE__, __FILE__, hr)
 #define ENGINE_WND_LASTEXCEPT() Engine::Window::HrException(__LINE__, __FILE__, GetLastError())
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace Engine
 {
@@ -197,6 +202,11 @@ namespace Engine
 
 	LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
+		if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+		{
+			return true;
+		}
+
 		switch (msg)
 		{
 		case WM_CLOSE:	// Window closed
