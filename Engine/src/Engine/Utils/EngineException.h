@@ -54,4 +54,15 @@ namespace Engine
 	private:
 		std::string m_NotFoundPath;
 	};
+
+	class InitializationError : public EngineException
+	{
+	public:
+		InitializationError(int line, const char* file, const std::string& errorDetails) noexcept;
+		const char* what() const noexcept override;
+		const char* GetType() const noexcept override;
+		std::string GetErrorDetails() const noexcept;
+	private:
+		std::string m_Details;
+	};
 }

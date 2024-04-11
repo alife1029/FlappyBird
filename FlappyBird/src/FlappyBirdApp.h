@@ -15,12 +15,16 @@ public:
 	virtual void Update();
 
 private:
-	Engine::Shader* m_Shader;
-	Engine::BatchRenderer* m_Renderer;
-	Engine::Viewport* m_Viewport;
-	Engine::Camera* m_Camera;
-	Engine::Texture2D	*m_BackgroundTexture,
-						*m_PipeTexture;
+	Engine::Shader			*m_Shader,
+							*m_TextShader;
+	Engine::BatchRenderer*	m_Renderer;
+	Engine::Viewport*		m_Viewport;
+	Engine::Camera*			m_Camera;
+	Engine::Texture2D		*m_BackgroundTexture,
+							*m_PipeTexture;
+	Engine::Font			*m_PixelifySans,
+							*m_Righteous;
+	Engine::TextRenderer*	m_TextRenderer;
 	std::vector<Engine::Texture2D*>	m_CharacterTextures;
 	float m_ElapsedTime = 0.0f;
 

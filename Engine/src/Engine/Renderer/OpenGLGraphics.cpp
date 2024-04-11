@@ -8,6 +8,9 @@
 namespace Engine
 {
 #pragma region OpenGL Graphics
+
+	extern int MAX_TEXTURES = 0;
+
 	OpenGLGraphics::OpenGLGraphics(Window* targetWindow)
 		:
 		m_TargetWindow(targetWindow)
@@ -61,6 +64,9 @@ namespace Engine
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+		// Get graphical properties
+		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MAX_TEXTURES);
+
 		std::cout << "OpenGL Version: " << GLVersion.major << "." << GLVersion.minor << std::endl;
 	}
 
@@ -93,34 +99,6 @@ namespace Engine
 
 #pragma region Exceptions
 	
-	OpenGLGraphics::InitializationError::InitializationError(int line, const char* file, const std::string& errorDetails) noexcept
-		:
-		EngineException(line, file),
-		m_Details(errorDetails)
-	{
-	}
-
-	const char* OpenGLGraphics::InitializationError::what() const noexcept
-	{
-		std::ostringstream oss;
-		oss << GetType() << std::endl
-			<< "[Error Details] " << GetErrorDetails() << std::endl
-			<< GetOriginString();
-
-		m_WhatBuffer = oss.str();
-		return m_WhatBuffer.c_str();
-	}
-
-	const char* OpenGLGraphics::InitializationError::GetType() const noexcept
-	{
-		return "OpenGL Graphics Initialization Error";
-	}
-
-	std::string OpenGLGraphics::InitializationError::GetErrorDetails() const noexcept
-	{
-		return m_Details;
-	}
-
 	const char* OpenGLGraphics::FramebufferSwapError::what() const noexcept
 	{
 		std::ostringstream oss;

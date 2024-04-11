@@ -6,5 +6,6 @@
 
 #include "Engine/Renderer/BatchRenderer.h"
 #include "Engine/Renderer/Camera.h"
+#include "Engine/Renderer/UI/TextRenderer.h"
 
 #include "Engine/Utils/Time.h"

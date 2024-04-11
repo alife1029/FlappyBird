@@ -3,6 +3,8 @@
 
 namespace Engine
 {
+#pragma region EngineException
+
 	EngineException::EngineException(int line, const char* file) noexcept
 		: m_Line(line), m_File(file)
 	{
@@ -36,7 +38,10 @@ namespace Engine
 			<< "[Line] " << m_Line;
 		return oss.str();
 	}
+	
+#pragma endregion
 
+#pragma region EngineWException
 
 	EngineWException::EngineWException(int line, const wchar_t* file) noexcept
 		:
@@ -79,6 +84,10 @@ namespace Engine
 		return wos.str();
 	}
 
+#pragma endregion
+
+#pragma region ResourceNotFoundException
+
 	ResourceNotFoundException::ResourceNotFoundException(int line, const char* file, const std::string& path)
 		:
 		EngineException(line, file), m_NotFoundPath(path)
@@ -101,4 +110,35 @@ namespace Engine
 	{
 		return m_NotFoundPath;
 	}
+
+#pragma endregion
+
+#pragma region InitializationError
+
+	InitializationError::InitializationError(int line, const char* file, const std::string& errorDetails) noexcept
+		:
+		EngineException(line, file),
+		m_Details(errorDetails)
+	{
+	}
+	const char* InitializationError::what() const noexcept
+	{
+		std::ostringstream oss;
+		oss << GetType() << std::endl
+			<< "[Error Details] " << GetErrorDetails() << std::endl
+			<< GetOriginString();
+
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+	const char* InitializationError::GetType() const noexcept
+	{
+		return "Initialization Error";
+	}
+	std::string InitializationError::GetErrorDetails() const noexcept
+	{
+		return m_Details;
+	}
+
+#pragma endregion
 }

@@ -34,7 +34,7 @@ namespace Engine
 			wc.cbWndExtra = 0;
 			wc.hInstance = GetInstance();
 			wc.hIcon = LoadIcon(GetInstance(), MAKEINTRESOURCE(101));
-			wc.hIconSm = LoadIcon(GetInstance(), MAKEINTRESOURCE(IDI_APPLICATION));
+			wc.hIconSm = nullptr;
 			wc.hCursor = nullptr;
 			wc.hbrBackground = nullptr;
 			wc.lpszMenuName = nullptr;

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
+#include <map>
 
 #include <Windows.h>
 
@@ -17,3 +18,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <stb/stb_image.h>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H

@@ -8,12 +8,11 @@
 namespace Engine
 {
 	static constexpr size_t	QUAD_PER_BATCH = 1000;
-	static int				MAX_TEXTURES = 0;
+	extern int				MAX_TEXTURES;
 
 	BatchRenderer::BatchRenderer(Shader* shader)
 	{
 		m_ShaderProgram = shader;
-		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MAX_TEXTURES);
 
 		m_QuadBuffer = new Vertex[QUAD_PER_BATCH];
 

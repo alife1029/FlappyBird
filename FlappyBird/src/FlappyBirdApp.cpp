@@ -8,7 +8,7 @@ using namespace glm;
 FlappyBirdApp::FlappyBirdApp()
 	:
 	m_Shader(nullptr), m_Renderer(nullptr), m_Viewport(nullptr), m_Camera(nullptr), m_BackgroundTexture(nullptr), m_Bg(nullptr), 
-	m_Bird(nullptr), m_PipeTexture(nullptr)
+	m_Bird(nullptr), m_PipeTexture(nullptr), m_PixelifySans(nullptr), m_Righteous(nullptr), m_TextRenderer(nullptr), m_TextShader(nullptr)
 {
 	m_Window = new Window(800, 600, "Flappy Bird", false);
 }
@@ -27,10 +27,15 @@ FlappyBirdApp::~FlappyBirdApp()
 	delete m_BackgroundTexture;
 	delete m_PipeTexture;
 
+	// Delete fonts
+	delete m_PixelifySans;
+
 	// Delete rendering components
 	delete m_Camera;
 	delete m_Viewport;
 	delete m_Shader;
+	delete m_TextShader;
+	delete m_TextRenderer;
 	delete m_Renderer;
 	delete m_Window;
 }
@@ -46,7 +51,9 @@ void FlappyBirdApp::Start()
 
 	// Create rendering components
 	m_Shader = new Shader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
+	m_TextShader = new Shader("res/shaders/font_vs.glsl", "res/shaders/font_fs.glsl");
 	m_Renderer = new BatchRenderer(m_Shader);
+	m_TextRenderer = new TextRenderer(m_TextShader);
 	m_Viewport = new Viewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	m_Camera = new Camera(m_Viewport);
 	m_Camera->zNear = 0.0f;
@@ -60,10 +67,14 @@ void FlappyBirdApp::Start()
 		new Texture2D("res/sprites/yellowbird-upflap.png"),
 	};
 
+	// Loading fonts
+	m_PixelifySans = new Font("res/fonts/PixelifySans.ttf", 128u, Texture2D::Filter::Point);
+	m_Righteous = new Font("res/fonts/Righteous.ttf");
+
 	// Create game objects
 	m_Bg = new Background(m_BackgroundTexture, { -1.0f, 0.0f, 0.0f });
 	m_Bird = new Bird(&m_CharacterTextures[0]);
-	m_Pipes = {
+	m_Pipes = { 
 		new Pipe(m_PipeTexture, 5.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
 		new Pipe(m_PipeTexture, 7.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
 		new Pipe(m_PipeTexture, 9.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
@@ -100,6 +111,15 @@ void FlappyBirdApp::Update()
 	for (Pipe* pipe : m_Pipes)
 		pipe->Render(m_Renderer);
 	m_Renderer->End();
+
+	m_TextRenderer->Begin({ m_Window->GetWidth(), m_Window->GetHeight() });
+	//m_TextRenderer->Draw(m_Righteous, "ABCDEFGHIJKLMN ", { 150, 150 }, 72.0f, { 1.0f, 1.0f, 1.0f, 1.0f });
+	m_TextRenderer->DrawChar(m_Righteous, 'A', { 0, 0 }, 75.0f);
+	m_TextRenderer->DrawChar(m_PixelifySans, 'D', { 100, 100 }, 75.0f);
+	m_TextRenderer->Draw(m_Righteous, "Hello World", { 300, 300 }, 36.0f);
+	m_TextRenderer->Draw(m_Righteous, "A B", { 25, 500 }, 36.0f);
+	m_TextRenderer->Draw(m_Righteous, "HELLO FLAPPY BIRD C++", { 25, 400 }, 36.0f);
+ 	m_TextRenderer->End();
 
 	m_Window->GetGfx()->EndFrame();
 	m_Window->ProcessEvents();
