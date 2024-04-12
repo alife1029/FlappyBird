@@ -1,6 +1,7 @@
 #include "engine_pch.h"
 
 #include "AppManager.h"
+#include "Engine/Renderer/Stats.h"
 
 namespace Engine
 {
@@ -19,6 +20,7 @@ namespace Engine
 		while (s_IsRunning)
 		{
 			app->Update();
+			RendererStats::Reset();
 		}
 
 		QuitApplication();

@@ -1,6 +1,7 @@
 #include "engine_pch.h"
 #include "TextRenderer.h"
 #include "Font.h"
+#include "../Stats.h"
 #include "Engine/Utils/EngineException.h"
 
 namespace Engine
@@ -116,6 +117,8 @@ namespace Engine
 		m_TextureSlotIndex = 0;
 
 		delete[] samplers;
+
+		++RendererStats::s_BatchCount;
 	}
 
 	void TextRenderer::Draw(Font* fontFamily, const std::string& text, const glm::vec2& position, float fontSize, const glm::vec4& color)
@@ -195,5 +198,8 @@ namespace Engine
 		}
 
 		m_IndexCount += 6;
+
+		RendererStats::s_TriangleCount += 2;
+		RendererStats::s_VertexCount += 4;
 	}
 }

@@ -6,6 +6,7 @@
 
 #include "Engine/Renderer/BatchRenderer.h"
 #include "Engine/Renderer/Camera.h"
+#include "Engine/Renderer/Stats.h"
 
 #include "Engine/Renderer/UI/TextRenderer.h"
 #include "Engine/Renderer/UI/ImGuiManager.h"

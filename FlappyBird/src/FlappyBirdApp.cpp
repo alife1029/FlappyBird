@@ -124,7 +124,7 @@ void FlappyBirdApp::Update()
 
 	// ImGui
 	ImGuiManager::NewFrame();
-	ImGui::Begin("Stats");
+	ImGui::Begin("Rendering Stats");
 	ImGui::Text("FPS: %g (%g ms)", 1.0f / Time::Delta(), 1000.0f * Time::Delta());
 
 	// Update FPS plot
@@ -135,6 +135,10 @@ void FlappyBirdApp::Update()
 	m_FpsHistory[std::size(m_FpsHistory) - 1] = 1.0f / Time::Delta();
 	ImGui::PlotLines("FPS", m_FpsHistory, std::size(m_FpsHistory));
 
+	ImGui::Text("Batch Count: %llu", RendererStats::GetBatchCount());
+	ImGui::Text("Vertex Count: %llu", RendererStats::GetVertexCount());
+	ImGui::Text("Traingle Count: %llu", RendererStats::GetTriangleCount());
+		
 	ImGui::End();
 	ImGuiManager::EndFrame();
 

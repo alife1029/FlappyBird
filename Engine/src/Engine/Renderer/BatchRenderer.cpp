@@ -1,5 +1,6 @@
 #include "engine_pch.h"
 #include "BatchRenderer.h"
+#include "Stats.h"
 
 #define DEFAULT_SCALE glm::vec3 { 1.0f, 1.0f, 0.0f }
 #define DEFAULT_ROTATION 0.0f
@@ -118,6 +119,8 @@ namespace Engine
 		m_TextureSlotIndex = 0;
 
 		delete[] samplers;
+
+		++RendererStats::s_BatchCount;
 	}
 
 	void BatchRenderer::DrawTexture(Texture2D* texture, const glm::mat4& transform, const glm::vec4& color)
@@ -180,6 +183,9 @@ namespace Engine
 		}
 
 		m_IndexCount += 6;
+
+		RendererStats::s_TriangleCount += 2;
+		RendererStats::s_VertexCount += 4;
 	}
 
 	void BatchRenderer::DrawTexture(Texture2D* texture, const glm::vec3& pos, const glm::vec3& scale, float zRotation, const glm::vec4& color)
