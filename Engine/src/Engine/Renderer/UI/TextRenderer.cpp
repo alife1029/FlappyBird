@@ -135,6 +135,84 @@ namespace Engine
 		}
 	}
 
+	void TextRenderer::Draw(Font* fontFamily, const std::string& text, const glm::vec2& position, Anchor anchor, float fontSize, const glm::vec4& color)
+	{
+		const float scaleFactor = fontSize / (float)fontFamily->m_FontSize;
+
+		glm::vec2 textboxDimensions{ 0.0f };
+		glm::vec2 textboxPosition;
+
+		textboxDimensions.y = fontFamily->m_FontSize * scaleFactor;
+
+		for (auto& c : text)
+		{
+			const Font::Character ch = fontFamily->m_Characters[c];
+			textboxDimensions.x += (ch.Bearing.x + (ch.Advance >> 6)) * scaleFactor;
+		}
+
+		switch (anchor)
+		{
+		case Engine::Anchor::TopLeft:
+			textboxPosition = {
+				position.x,
+				m_WindowDimensions.y - position.y - textboxDimensions.y
+			};
+			break;
+		case Engine::Anchor::TopCenter:
+			textboxPosition = {
+				m_WindowDimensions.x / 2.0f + position.x - textboxDimensions.x / 2.0f,
+				m_WindowDimensions.y - position.y - textboxDimensions.y
+			};
+			break;
+		case Engine::Anchor::TopRight:
+			textboxPosition = {
+				m_WindowDimensions.x - position.x - textboxDimensions.x,
+				m_WindowDimensions.y - position.y - textboxDimensions.y
+			};
+			break;
+		
+		case Engine::Anchor::MiddleLeft:
+			textboxPosition = {
+				position.x,
+				m_WindowDimensions.y / 2.0f + position.y - textboxDimensions.y / 2.0f
+			};
+			break;
+		case Engine::Anchor::MiddleCenter:
+			textboxPosition = {
+				m_WindowDimensions.x / 2.0f + position.x - textboxDimensions.x / 2.0f,
+				m_WindowDimensions.y / 2.0f + position.y - textboxDimensions.y / 2.0f
+			};
+			break;
+		case Engine::Anchor::MiddleRight:
+			textboxPosition = {
+				m_WindowDimensions.x - position.x - textboxDimensions.x,
+				m_WindowDimensions.y / 2.0f + position.y - textboxDimensions.y / 2.0f
+			};
+			break;
+		
+		case Engine::Anchor::BottomLeft:
+			textboxPosition = {
+				position.x,
+				position.y
+			};
+			break;
+		case Engine::Anchor::BottomCenter:
+			textboxPosition = {
+				m_WindowDimensions.x / 2.0f + position.x - textboxDimensions.x / 2.0f,
+				position.y
+			};
+			break;
+		case Engine::Anchor::BottomRight:
+			textboxPosition = {
+				m_WindowDimensions.x - position.x - textboxDimensions.x,
+				position.y
+			};
+			break;
+		}
+	
+		Draw(fontFamily, text, textboxPosition, fontSize, color);
+	}
+
 	void TextRenderer::DrawChar(Font* fontFamily, char chr, const glm::vec2& position, float fontSize, const glm::vec4& color)
 	{
 		if (m_IndexCount >= QUAD_PER_BATCH * 6)

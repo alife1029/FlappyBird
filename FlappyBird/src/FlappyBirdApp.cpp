@@ -119,12 +119,23 @@ void FlappyBirdApp::Update()
 	m_Renderer->End();
 
 	m_TextRenderer->Begin({ m_Window->GetWidth(), m_Window->GetHeight() });
-	m_TextRenderer->Draw(m_Righteous, "HELLO FLAPPY BIRD C++", { 25, 400 }, 36.0f);
+	m_TextRenderer->Draw(m_Righteous, "Top Left", { 0, 0 }, Anchor::TopLeft, 24.0f);
+	m_TextRenderer->Draw(m_Righteous, "Top Center", { 0, 0 }, Anchor::TopCenter, 24.0f);
+	m_TextRenderer->Draw(m_Righteous, "Top Right", { 0, 0 }, Anchor::TopRight, 24.0f);
+
+	m_TextRenderer->Draw(m_Righteous, "Middle Left", { 0, 0 }, Anchor::MiddleLeft, 24.0f);
+	m_TextRenderer->Draw(m_Righteous, "Middle Center", { 0, 0 }, Anchor::MiddleCenter, 24.0f);
+	m_TextRenderer->Draw(m_Righteous, "Middle Right", { 0, 0 }, Anchor::MiddleRight, 24.0f);
+
+	m_TextRenderer->Draw(m_Righteous, "Bottom Left", { 0, 0 }, Anchor::BottomLeft, 24.0f);
+	m_TextRenderer->Draw(m_Righteous, "Bottom Center", { 0, 0 }, Anchor::BottomCenter, 24.0f);
+	m_TextRenderer->Draw(m_Righteous, "Bottom Right", { 0, 0 }, Anchor::BottomRight, 24.0f);
  	m_TextRenderer->End();
 
 	// ImGui
 	ImGuiManager::NewFrame();
 	ImGui::Begin("Rendering Stats");
+	
 	ImGui::Text("FPS: %g (%g ms)", 1.0f / Time::Delta(), 1000.0f * Time::Delta());
 
 	// Update FPS plot
