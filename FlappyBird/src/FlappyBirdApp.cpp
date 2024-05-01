@@ -8,7 +8,7 @@ using namespace glm;
 FlappyBirdApp::FlappyBirdApp()
 	:
 	m_Shader(nullptr), m_Renderer(nullptr), m_Viewport(nullptr), m_Camera(nullptr), m_BackgroundTexture(nullptr), m_Bg(nullptr), 
-	m_Bird(nullptr), m_PipeTexture(nullptr), m_PixelifySans(nullptr), m_Righteous(nullptr), m_TextRenderer(nullptr), m_TextShader(nullptr)
+	m_Bird(nullptr), m_PipeTexture(nullptr), m_PixelifySans(nullptr), m_Righteous(nullptr), m_UiRenderer(nullptr), m_UIShader(nullptr)
 {
 	m_Window = new Window(800, 600, "Flappy Bird", false);
 }
@@ -29,6 +29,7 @@ FlappyBirdApp::~FlappyBirdApp()
 	m_CharacterTextures = {};
 	delete m_BackgroundTexture;
 	delete m_PipeTexture;
+	delete m_WhiteTexture;
 
 	// Delete fonts
 	delete m_PixelifySans;
@@ -37,8 +38,8 @@ FlappyBirdApp::~FlappyBirdApp()
 	delete m_Camera;
 	delete m_Viewport;
 	delete m_Shader;
-	delete m_TextShader;
-	delete m_TextRenderer;
+	delete m_UIShader;
+	delete m_UiRenderer;
 	delete m_Renderer;
 	delete m_Window;
 }
@@ -57,9 +58,9 @@ void FlappyBirdApp::Start()
 
 	// Create rendering components
 	m_Shader = new Shader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
-	m_TextShader = new Shader("res/shaders/font_vs.glsl", "res/shaders/font_fs.glsl");
+	m_UIShader = new Shader("res/shaders/ui_vs.glsl", "res/shaders/ui_fs.glsl");
 	m_Renderer = new BatchRenderer(m_Shader);
-	m_TextRenderer = new TextRenderer(m_TextShader);
+	m_UiRenderer = new UIRenderer(m_UIShader);
 	m_Viewport = new Viewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	m_Camera = new Camera(m_Viewport);
 	m_Camera->zNear = 0.0f;
@@ -72,6 +73,7 @@ void FlappyBirdApp::Start()
 		new Texture2D("res/sprites/yellowbird-midflap.png"),
 		new Texture2D("res/sprites/yellowbird-upflap.png"),
 	};
+	m_WhiteTexture = Texture2D::LoadWhiteTexture();
 
 	// Loading fonts
 	m_PixelifySans = new Font("res/fonts/PixelifySans.ttf", 128u, Texture2D::Filter::Point);
@@ -118,19 +120,26 @@ void FlappyBirdApp::Update()
 		pipe->Render(m_Renderer);
 	m_Renderer->End();
 
-	m_TextRenderer->Begin({ m_Window->GetWidth(), m_Window->GetHeight() });
-	m_TextRenderer->Draw(m_Righteous, "Top Left", { 0, 0 }, Anchor::TopLeft, 24.0f);
-	m_TextRenderer->Draw(m_Righteous, "Top Center", { 0, 0 }, Anchor::TopCenter, 24.0f);
-	m_TextRenderer->Draw(m_Righteous, "Top Right", { 0, 0 }, Anchor::TopRight, 24.0f);
+	m_UiRenderer->Begin({ m_Window->GetWidth(), m_Window->GetHeight() });
 
-	m_TextRenderer->Draw(m_Righteous, "Middle Left", { 0, 0 }, Anchor::MiddleLeft, 24.0f);
-	m_TextRenderer->Draw(m_Righteous, "Middle Center", { 0, 0 }, Anchor::MiddleCenter, 24.0f);
-	m_TextRenderer->Draw(m_Righteous, "Middle Right", { 0, 0 }, Anchor::MiddleRight, 24.0f);
+	m_UiRenderer->DrawImage(m_WhiteTexture, { 0.0f, 0.0f }, { 196, 96 }, 0.0f, Anchor::MiddleCenter, Anchor::MiddleCenter, { 0.6, 0.6, 0.6, 0.4 });
+	m_UiRenderer->DrawImage(m_WhiteTexture, { 0.0f, 0.0f }, { 196, 96 }, 0.0f, Anchor::MiddleCenter, Anchor::TopLeft, { 1.0, 0.6, 0.6, 0.4 });
 
-	m_TextRenderer->Draw(m_Righteous, "Bottom Left", { 0, 0 }, Anchor::BottomLeft, 24.0f);
-	m_TextRenderer->Draw(m_Righteous, "Bottom Center", { 0, 0 }, Anchor::BottomCenter, 24.0f);
-	m_TextRenderer->Draw(m_Righteous, "Bottom Right", { 0, 0 }, Anchor::BottomRight, 24.0f);
- 	m_TextRenderer->End();
+	m_UiRenderer->DrawImage(m_WhiteTexture, { 150.0f, 75.0f }, { 196, 96 }, 0.0f, Anchor::MiddleCenter, Anchor::MiddleCenter, { 0.6, 0.6, 0.6, 0.4 });
+	m_UiRenderer->DrawImage(m_WhiteTexture, { 150.0f, 75.0f }, { 196, 96 }, 0.0f, Anchor::MiddleCenter, Anchor::TopLeft, { 1.0, 0.6, 0.6, 0.4 });
+
+	m_UiRenderer->DrawTxt(m_Righteous, "Top Left", { 0, 0 }, Anchor::TopLeft, 24.0f);
+	m_UiRenderer->DrawTxt(m_Righteous, "Top Center", { 0, 0 }, Anchor::TopCenter, 24.0f);
+	m_UiRenderer->DrawTxt(m_Righteous, "Top Right", { 0, 0 }, Anchor::TopRight, 24.0f);
+
+	m_UiRenderer->DrawTxt(m_Righteous, "Middle Left", { 0, 0 }, Anchor::MiddleLeft, 24.0f);
+	m_UiRenderer->DrawTxt(m_Righteous, "Middle Center", { 0, 0 }, Anchor::MiddleCenter, 24.0f);
+	m_UiRenderer->DrawTxt(m_Righteous, "Middle Right", { 0, 0 }, Anchor::MiddleRight, 24.0f);
+
+	m_UiRenderer->DrawTxt(m_Righteous, "Bottom Left", { 0, 0 }, Anchor::BottomLeft, 24.0f);
+	m_UiRenderer->DrawTxt(m_Righteous, "Bottom Center", { 0, 0 }, Anchor::BottomCenter, 24.0f);
+	m_UiRenderer->DrawTxt(m_Righteous, "Bottom Right", { 0, 0 }, Anchor::BottomRight, 24.0f);
+	m_UiRenderer->End();
 
 	// ImGui
 	ImGuiManager::NewFrame();
@@ -144,7 +153,7 @@ void FlappyBirdApp::Update()
 		m_FpsHistory[i - 1] = m_FpsHistory[i];
 	}
 	m_FpsHistory[std::size(m_FpsHistory) - 1] = 1.0f / Time::Delta();
-	ImGui::PlotLines("FPS", m_FpsHistory, std::size(m_FpsHistory));
+	ImGui::PlotLines("FPS", m_FpsHistory, (int)std::size(m_FpsHistory));
 
 	ImGui::Text("Batch Count: %llu", RendererStats::GetBatchCount());
 	ImGui::Text("Vertex Count: %llu", RendererStats::GetVertexCount());

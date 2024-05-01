@@ -16,15 +16,16 @@ public:
 
 private:
 	Engine::Shader			*m_Shader,
-							*m_TextShader;
+							*m_UIShader;
 	Engine::BatchRenderer*	m_Renderer;
 	Engine::Viewport*		m_Viewport;
 	Engine::Camera*			m_Camera;
 	Engine::Texture2D		*m_BackgroundTexture,
-							*m_PipeTexture;
+							*m_PipeTexture,
+							*m_WhiteTexture;
 	Engine::Font			*m_PixelifySans,
 							*m_Righteous;
-	Engine::TextRenderer*	m_TextRenderer;
+	Engine::UIRenderer*	m_UiRenderer;
 	std::vector<Engine::Texture2D*>	m_CharacterTextures;
 	float m_ElapsedTime = 0.0f;
 

@@ -6,7 +6,7 @@ namespace Engine
 	{
 		friend class AppManager;
 		friend class BatchRenderer;
-		friend class TextRenderer;
+		friend class UIRenderer;
 	public:
 		static size_t GetBatchCount();
 		static size_t GetTriangleCount();

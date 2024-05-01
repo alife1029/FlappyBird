@@ -11,7 +11,7 @@ namespace Engine
 {
 	class Font
 	{
-		friend class TextRenderer;
+		friend class UIRenderer;
 	public:
 		struct Character
 		{

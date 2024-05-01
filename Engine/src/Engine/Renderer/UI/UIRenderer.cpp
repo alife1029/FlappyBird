@@ -1,5 +1,5 @@
 #include "engine_pch.h"
-#include "TextRenderer.h"
+#include "UIRenderer.h"
 #include "Font.h"
 #include "../Stats.h"
 #include "Engine/Utils/EngineException.h"
@@ -9,7 +9,7 @@ namespace Engine
 	extern int				MAX_TEXTURES;
 	static constexpr size_t	QUAD_PER_BATCH = 1000;
 
-	TextRenderer::TextRenderer(Shader* shader)
+	UIRenderer::UIRenderer(Shader* shader)
 	{
 		m_ShaderProgram = shader;
 		m_QuadBuffer = new Vertex[QUAD_PER_BATCH];
@@ -68,7 +68,7 @@ namespace Engine
 		m_TextureSlotIndex = 0;
 	}
 
-	TextRenderer::~TextRenderer()
+	UIRenderer::~UIRenderer()
 	{
 		glDeleteVertexArrays(1, &m_VAO);
 		glDeleteBuffers(1, &m_VBO);
@@ -78,13 +78,13 @@ namespace Engine
 		delete[] m_QuadBuffer;
 	}
 
-	void TextRenderer::Begin(const glm::ivec2& windowDimension)
+	void UIRenderer::Begin(const glm::ivec2& windowDimension)
 	{
 		m_QuadbufferPtr = m_QuadBuffer;
 		m_WindowDimensions = windowDimension;
 	}
 
-	void TextRenderer::End()
+	void UIRenderer::End()
 	{
 		// Load vertex data to the GPU
 		GLsizeiptr size = (uint8_t*)m_QuadbufferPtr - (uint8_t*)m_QuadBuffer;
@@ -121,7 +121,111 @@ namespace Engine
 		++RendererStats::s_BatchCount;
 	}
 
-	void TextRenderer::Draw(Font* fontFamily, const std::string& text, const glm::vec2& position, float fontSize, const glm::vec4& color)
+	void UIRenderer::DrawImage(Texture2D* img, const glm::vec2& position, const glm::vec2& scale, float rotation, Anchor anchor, Anchor pivot, const glm::vec4& color)
+	{
+		if (m_IndexCount >= QUAD_PER_BATCH * 6)
+		{
+			End();
+			Begin(m_WindowDimensions);
+		}
+
+		// Is the texture has used in the current batch?
+		float texIndex = -1.0f;
+		for (uint32_t i = 0; i < m_TextureSlotIndex; i++)
+		{
+			if (m_TextureSlots[i] == img->GetID())
+			{
+				texIndex = static_cast<float>(i);
+				break;
+			}
+		}
+
+		// If not used, add the id of this texture to the texture slots array
+		if (texIndex == -1.0f)
+		{
+			if (m_TextureSlotIndex >= static_cast<uint32_t>(MAX_TEXTURES) - 1)
+			{
+				End();
+				Begin(m_WindowDimensions);
+			}
+
+			texIndex = static_cast<float>(m_TextureSlotIndex);
+			m_TextureSlots[m_TextureSlotIndex] = img->GetID();
+			++m_TextureSlotIndex;
+		}
+
+		glm::vec2 pos{ 0.0f };
+
+		// Set position by anchor
+		// x-axis
+		switch (static_cast<int>(anchor) % 3)
+		{
+		case 0:	pos.x = position.x; break;									// LEFT
+		case 1:	pos.x = m_WindowDimensions.x / 2.0f + position.x; break;	// CENTER
+		case 2:	pos.x = m_WindowDimensions.x - position.x; break;			// RIGHT
+		}
+		
+		// y-axis
+		switch (static_cast<int>(anchor) / 3)
+		{
+		case 0: pos.y = m_WindowDimensions.y - position.y; break;			// TOP
+		case 1:	pos.y = m_WindowDimensions.y / 2.0f + position.y; break;	// MIDDLE
+		case 2: pos.y = position.y; break;									// BOTTOM
+		}
+
+		// Set vertices by pivot
+		glm::vec4 vertexPoses[] = {
+			{ 0.0f, 0.0f, 0.0f, 1.0f },
+			{ 1.0f, 0.0f, 0.0f, 1.0f },
+			{ 1.0f, 1.0f, 0.0f, 1.0f },
+			{ 0.0f, 1.0f, 0.0f, 1.0f },
+		};
+
+		glm::vec2 texCoords[] = {
+			{ 0.0f, 0.0f },
+			{ 1.0f, 0.0f },
+			{ 1.0f, 1.0f },
+			{ 0.0f, 1.0f },
+		};
+
+		// Pivot
+		for (glm::vec4& vert : vertexPoses)
+		{
+			vert -= glm::vec4{ 
+				0.5f * (static_cast<int>(pivot) % 3),
+				0.5f * (2 - static_cast<int>(pivot) / 3),
+				0.0f,
+				0.0f,
+			};
+		}
+
+		// Transform vertices
+		for (size_t i = 0; i < 4; i++)
+		{
+			m_QuadbufferPtr->Position = glm::scale(
+				glm::rotate(
+					glm::translate(
+						glm::mat4(1.0f),
+						{ pos.x, pos.y, 0.0f}
+					),
+					glm::radians(rotation),
+					{ 0.0f, 0.0f, 1.0f }
+				),
+				{ scale.x, scale.y, 0.0f }
+			) * vertexPoses[i];
+			m_QuadbufferPtr->Color = color;
+			m_QuadbufferPtr->TextureCoords = texCoords[i];
+			m_QuadbufferPtr->TextureIndex = texIndex;
+			++m_QuadbufferPtr;
+		}
+
+		m_IndexCount += 6;
+
+		RendererStats::s_TriangleCount += 2;
+		RendererStats::s_VertexCount += 4;
+	}
+
+	void UIRenderer::DrawTxt(Font* fontFamily, const std::string& text, const glm::vec2& position, float fontSize, const glm::vec4& color)
 	{
 		glm::vec2 offset{ 0.0f };
 
@@ -135,7 +239,7 @@ namespace Engine
 		}
 	}
 
-	void TextRenderer::Draw(Font* fontFamily, const std::string& text, const glm::vec2& position, Anchor anchor, float fontSize, const glm::vec4& color)
+	void UIRenderer::DrawTxt(Font* fontFamily, const std::string& text, const glm::vec2& position, Anchor anchor, float fontSize, const glm::vec4& color)
 	{
 		const float scaleFactor = fontSize / (float)fontFamily->m_FontSize;
 
@@ -210,10 +314,10 @@ namespace Engine
 			break;
 		}
 	
-		Draw(fontFamily, text, textboxPosition, fontSize, color);
+		DrawTxt(fontFamily, text, textboxPosition, fontSize, color);
 	}
 
-	void TextRenderer::DrawChar(Font* fontFamily, char chr, const glm::vec2& position, float fontSize, const glm::vec4& color)
+	void UIRenderer::DrawChar(Font* fontFamily, char chr, const glm::vec2& position, float fontSize, const glm::vec4& color)
 	{
 		if (m_IndexCount >= QUAD_PER_BATCH * 6)
 		{
