@@ -97,7 +97,7 @@ namespace Engine
 	{
 		std::ostringstream oss;
 		oss << GetType() << std::endl
-			<< "[Missing File ]" << GetNotFoundPath() << std::endl
+			<< "[Missing File] " << GetNotFoundPath() << std::endl
 			<< GetOriginString();
 		m_WhatBuffer = oss.str();
 		return m_WhatBuffer.c_str();

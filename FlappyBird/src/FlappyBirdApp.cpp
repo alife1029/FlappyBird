@@ -12,6 +12,17 @@ FlappyBirdApp::FlappyBirdApp()
 	m_UiImageShader(nullptr)
 {
 	m_Window = new Window(800, 600, "Flappy Bird", false);
+
+	// Read high score
+	try
+	{
+		uint8_t* data = Engine::File::ReadBinaryFile("game.dat");
+		m_HiScore = *(unsigned int*)(data);
+	}
+	catch (const std::exception&)
+	{
+		m_HiScore = 0;
+	}
 }
 
 FlappyBirdApp::~FlappyBirdApp()
@@ -174,7 +185,15 @@ void FlappyBirdApp::StartGame()
 void FlappyBirdApp::ResetGame()
 {
 	m_GameRunning = false;
-	if (m_Score > m_HiScore) m_HiScore = m_Score;
+	
+	if (m_Score > m_HiScore)
+	{
+		m_HiScore = m_Score;
+
+		// Save new high score
+		File::WriteBinaryFile("game.dat", &m_HiScore, sizeof(m_HiScore));
+	}
+
 	m_Score = 0;
 }
 
