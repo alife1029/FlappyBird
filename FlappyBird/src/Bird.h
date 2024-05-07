@@ -7,6 +7,7 @@ class Bird
 public:
 	Bird(Engine::Texture2D** textures);
 
+	void Start();
 	void Update(float timeElapsed);
 	void Render(Engine::BatchRenderer* renderer);
 	

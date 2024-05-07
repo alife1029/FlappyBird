@@ -4,9 +4,15 @@ using namespace Engine;
 
 Bird::Bird(Texture2D** textures)
 	:
-	m_Textures(textures), m_CurrentTexture(nullptr), Position({ 0.0f }), m_Rotation(0.0f), m_Velocity({ 0.0f })
+	m_Textures(textures), m_CurrentTexture(textures[0]), Position({0.0f}), m_Rotation(0.0f), m_Velocity({0.0f})
 {
 
+}
+
+void Bird::Start()
+{
+	Position.y = 0.0f;
+	m_Velocity.y = 0.0f;
 }
 
 void Bird::Update(float timeElapsed)
@@ -27,5 +33,5 @@ void Bird::Update(float timeElapsed)
 
 void Bird::Render(Engine::BatchRenderer* renderer)
 {
-	renderer->DrawTexture(m_CurrentTexture == nullptr ? m_Textures[0] : m_CurrentTexture, Position, m_Rotation);
+	renderer->DrawTexture(m_CurrentTexture, Position, m_Rotation);
 }

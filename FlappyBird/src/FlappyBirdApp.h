@@ -23,6 +23,9 @@ private:
 	void RenderImGui();
 
 private:
+	void OnBirdBetweenPipes(bool isCollide);
+
+private:
 	Engine::Shader			*m_Shader,
 							*m_TextShader,
 							*m_UiImageShader;
@@ -40,6 +43,9 @@ private:
 
 	unsigned int	m_Score = 0,
 					m_HiScore = 0;
+
+	bool m_BirdBetweenGaps = false;
+	bool m_BirdNearPipes = false;
 
 	bool m_GameRunning = false;
 	bool m_FirstLaunched = true;

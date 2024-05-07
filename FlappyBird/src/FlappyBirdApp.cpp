@@ -80,10 +80,10 @@ void FlappyBirdApp::Start()
 
 	// Loading fonts
 	m_PixelifySans = new Font("res/fonts/PixelifySans.ttf", 128u, Texture2D::Filter::Point);
-	m_Righteous = new Font("res/fonts/Righteous.ttf");
+	m_Righteous = new Font("res/fonts/Righteous.ttf", 128u);
 
 	// Create game objects
-	m_Bg = new Background(m_BackgroundTexture, { -1.0f, 0.0f, 0.0f });
+	m_Bg = new Background(m_BackgroundTexture, { -0.3f, 0.0f, 0.0f });
 	m_Bird = new Bird(&m_CharacterTextures[0]);
 	m_Pipes = { 
 		new Pipe(m_PipeTexture, 5.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
@@ -105,17 +105,28 @@ void FlappyBirdApp::Update()
 {
 	App::Update();
 
-	// Game logic update
-	m_Bg->Update();
-
+	// Game logic update	
 	if (m_GameRunning)
 	{
+		// Game is running
+		m_Bg->Update();
 		m_Bird->Update(m_ElapsedTime);
+
+		m_BirdNearPipes = false;
 		for (Pipe* pipe : m_Pipes)
-			pipe->Update();
+		{
+			pipe->Update(std::bind(&FlappyBirdApp::OnBirdBetweenPipes, this, std::placeholders::_1));
+		}
+
+		if (!m_BirdNearPipes) m_BirdBetweenGaps = false;
+
+		if (abs(m_Bird->Position.y) > 2.4f) ResetGame();
 	}
 	else
 	{
+		if (m_FirstLaunched) m_Bg->Update();
+
+		// Game paused
 		if (Input::IsKeyJustPressed(Key::Enter))
 		{
 			StartGame();
@@ -147,18 +158,31 @@ void FlappyBirdApp::StartGame()
 {
 	m_FirstLaunched = false;
 	m_GameRunning = true;
+	m_BirdBetweenGaps = false;
+	m_BirdNearPipes = false;
+
+	// Reset pipe locations
+	for (size_t i = 0; i < std::size(m_Pipes); i++)
+	{
+		m_Pipes[i]->Position.x = 5.0f + 2.0f * i;
+	}
+
+	// Start bird
+	m_Bird->Start();
 }
 
 void FlappyBirdApp::ResetGame()
 {
 	m_GameRunning = false;
+	if (m_Score > m_HiScore) m_HiScore = m_Score;
+	m_Score = 0;
 }
 
 void FlappyBirdApp::RenderObjects()
 {
 	m_Renderer->Begin(m_Camera->GetCombinedMatrix());
 	m_Bg->Render(m_Renderer);
-	if (m_GameRunning)
+	if (!m_FirstLaunched)
 	{
 		m_Bird->Render(m_Renderer);
 		for (Pipe* pipe : m_Pipes)
@@ -202,7 +226,7 @@ void FlappyBirdApp::RenderUI()
 	// Render in-game UI when the game is running
 	else
 	{
-		m_UiRenderer->DrawTxt(m_PixelifySans, std::to_string(m_Score), { 0.0f, 16.0f }, Anchor::TopCenter, 96.0f);
+		m_UiRenderer->DrawTxt(m_Righteous, std::to_string(m_Score), { 0.0f, 16.0f }, Anchor::TopCenter, 96.0f);
 	}
 	
 	m_UiRenderer->End();
@@ -229,4 +253,22 @@ void FlappyBirdApp::RenderImGui()
 
 	ImGui::End();
 	ImGuiManager::EndFrame();
+}
+
+void FlappyBirdApp::OnBirdBetweenPipes(bool isCollide)
+{
+	m_BirdNearPipes = true;
+
+	if (isCollide)
+	{
+		ResetGame();
+	}
+	else
+	{
+		if (!m_BirdBetweenGaps)
+		{
+			++m_Score;
+			m_BirdBetweenGaps = true;
+		}
+	}
 }
