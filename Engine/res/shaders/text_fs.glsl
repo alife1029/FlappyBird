@@ -13,5 +13,5 @@ uniform sampler2D u_Samplers[MAX_TEXTURES];
 void main()
 {
 	int texIndex = int(v_TexIndex);
-	FragColor = vec4(1.0, 1.0, 1.0, texture(u_Samplers[texIndex], v_TexCoord).r) * v_Color;
+	FragColor = vec4(1.0, 1.0, 1.0, texture(u_Samplers[texIndex].r, v_TexCoord)) * v_Color;
 }

@@ -27,5 +27,5 @@ void Bird::Update(float timeElapsed)
 
 void Bird::Render(Engine::BatchRenderer* renderer)
 {
-	renderer->DrawTexture(m_CurrentTexture, Position, m_Rotation);
+	renderer->DrawTexture(m_CurrentTexture == nullptr ? m_Textures[0] : m_CurrentTexture, Position, m_Rotation);
 }

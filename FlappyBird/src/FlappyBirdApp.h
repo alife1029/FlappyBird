@@ -15,8 +15,17 @@ public:
 	virtual void Update();
 
 private:
+	void StartGame();
+	void ResetGame();
+
+	void RenderObjects();
+	void RenderUI();
+	void RenderImGui();
+
+private:
 	Engine::Shader			*m_Shader,
-							*m_UIShader;
+							*m_TextShader,
+							*m_UiImageShader;
 	Engine::BatchRenderer*	m_Renderer;
 	Engine::Viewport*		m_Viewport;
 	Engine::Camera*			m_Camera;
@@ -28,6 +37,12 @@ private:
 	Engine::UIRenderer*	m_UiRenderer;
 	std::vector<Engine::Texture2D*>	m_CharacterTextures;
 	float m_ElapsedTime = 0.0f;
+
+	unsigned int	m_Score = 0,
+					m_HiScore = 0;
+
+	bool m_GameRunning = false;
+	bool m_FirstLaunched = true;
 
 	Background* m_Bg;
 	Bird* m_Bird;
