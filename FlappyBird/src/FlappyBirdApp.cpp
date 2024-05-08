@@ -46,6 +46,9 @@ FlappyBirdApp::~FlappyBirdApp()
 	// Delete fonts
 	delete m_PixelifySans;
 
+	// Delete audio components
+	delete m_AudioSource;
+
 	// Delete rendering components
 	delete m_Camera;
 	delete m_Viewport;
@@ -54,7 +57,7 @@ FlappyBirdApp::~FlappyBirdApp()
 	delete m_UiImageShader;
 	delete m_UiRenderer;
 	delete m_Renderer;
-	delete m_Window;
+	delete m_Window;	
 }
 
 void FlappyBirdApp::Start()
@@ -107,6 +110,16 @@ void FlappyBirdApp::Start()
 		new Pipe(m_PipeTexture, 19.0f, { -1.0f, 0.0f, 0.0f }, m_Bird),
 		new Pipe(m_PipeTexture, 21.0f, { -1.0f, 0.0f, 0.0f }, m_Bird)
 	};
+
+	// Initialize audio components
+	m_AudioDevice = AudioDevice::Get();
+	m_AudioSource = new AudioSource();
+
+	// Load sounds
+	m_ParadiseCity = SoundBuffer::Get()->AddSoundEffect("res/audio/paradise_city.mp3");
+
+	// Let's rock!
+	m_AudioSource->Play(m_ParadiseCity);
 
 	// Random seed
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));

@@ -9,7 +9,8 @@ file(GLOB FLAPPY_PROJECT_SOURCES	src/**.h
 add_executable(${PROJECT_NAME} WIN32 ${FLAPPY_PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE	../Engine/src
 													../Engine/vendor/glm
-													../Engine/vendor/imgui)
+													../Engine/vendor/imgui
+													../Engine/vendor/openal/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE Engine opengl32)
 
 # Post Build Commands
@@ -22,4 +23,8 @@ add_custom_command(	TARGET ${PROJECT_NAME} POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E copy_directory
 					${CMAKE_SOURCE_DIR}/Engine/res/
 					${CMAKE_BINARY_DIR}/${PROJECT_NAME}/res/
+
+					COMMAND ${CMAKE_COMMAND} -E copy_directory
+					${CMAKE_BINARY_DIR}/Engine/dll/
+					${CMAKE_BINARY_DIR}/${PROJECT_NAME}/
 					)

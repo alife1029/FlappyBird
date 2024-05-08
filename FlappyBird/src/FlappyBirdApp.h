@@ -38,6 +38,9 @@ private:
 	Engine::Font			*m_PixelifySans,
 							*m_Righteous;
 	Engine::UIRenderer*	m_UiRenderer;
+	Engine::AudioDevice* m_AudioDevice = nullptr;
+	Engine::AudioSource* m_AudioSource = nullptr;
+	unsigned int m_ParadiseCity = 0;
 	std::vector<Engine::Texture2D*>	m_CharacterTextures;
 	float m_ElapsedTime = 0.0f;
 
