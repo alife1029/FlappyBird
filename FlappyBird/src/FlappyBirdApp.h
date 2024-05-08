@@ -42,10 +42,9 @@ private:
 	Engine::AudioSource		*m_UiAudioSource = nullptr,
 							*m_DieAudioSource = nullptr,
 							*m_ScoreAudioSource = nullptr;
-	unsigned int	m_WingSfx = 0,
-					m_DieSfx = 0,
-					m_PointSfx = 0,
-					m_SwooshSfx = 0;
+	Engine::AudioClip	*m_DieSfx = 0,
+						*m_PointSfx = 0,
+						*m_SwooshSfx = 0;
 	std::vector<Engine::Texture2D*>	m_CharacterTextures;
 	float m_ElapsedTime = 0.0f;
 

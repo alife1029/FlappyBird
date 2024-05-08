@@ -47,10 +47,9 @@ FlappyBirdApp::~FlappyBirdApp()
 	delete m_PixelifySans;
 
 	// Unload sound effects
-	SoundBuffer::Get()->RemoveSoundEffect(m_WingSfx);
-	SoundBuffer::Get()->RemoveSoundEffect(m_DieSfx);
-	SoundBuffer::Get()->RemoveSoundEffect(m_PointSfx);
-	SoundBuffer::Get()->RemoveSoundEffect(m_SwooshSfx);
+	delete m_DieSfx;
+	delete m_PointSfx;
+	delete m_SwooshSfx;
 
 	// Delete audio components
 	delete m_UiAudioSource;
@@ -110,14 +109,14 @@ void FlappyBirdApp::Start()
 	m_ScoreAudioSource->SetGain(0.21f);
 
 	// Load sound effects
-	m_WingSfx = SoundBuffer::Get()->AddSoundEffect("res/audio/wing.ogg");
-	m_DieSfx = SoundBuffer::Get()->AddSoundEffect("res/audio/die.ogg");
-	m_PointSfx = SoundBuffer::Get()->AddSoundEffect("res/audio/point.ogg");
-	m_SwooshSfx = SoundBuffer::Get()->AddSoundEffect("res/audio/swoosh.ogg");
+	
+	m_DieSfx = new AudioClip("res/audio/die.ogg");
+	m_PointSfx = new AudioClip("res/audio/point.ogg");
+	m_SwooshSfx = new AudioClip("res/audio/swoosh.ogg");
 
 	// Create game objects
 	m_Bg = new Background(m_BackgroundTexture, { -0.3f, 0.0f, 0.0f });
-	m_Bird = new Bird(&m_CharacterTextures[0], m_WingSfx);
+	m_Bird = new Bird(&m_CharacterTextures[0]);
 	m_Pipes = {
 		new Pipe(m_PipeTexture, 5.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
 		new Pipe(m_PipeTexture, 7.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),

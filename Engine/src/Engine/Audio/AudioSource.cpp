@@ -21,11 +21,11 @@ namespace Engine
 		alDeleteSources(1, &m_Source);
 	}
 
-	void AudioSource::Play(const unsigned int bufferToPlay)
+	void AudioSource::Play(AudioClip* clip)
 	{
-		if (bufferToPlay != m_Buffer)
+		if (clip->GetBuffer() != m_Buffer)
 		{
-			m_Buffer = bufferToPlay;
+			m_Buffer = clip->GetBuffer();
 			alSourcei(m_Source, AL_BUFFER, m_Buffer);
 		}
 

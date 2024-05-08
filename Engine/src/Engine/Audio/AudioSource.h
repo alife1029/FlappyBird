@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AudioClip.h"
 #include <glm/vec3.hpp>
 
 namespace Engine
@@ -10,7 +11,7 @@ namespace Engine
 		AudioSource();
 		~AudioSource();
 
-		void Play(const unsigned int bufferToPlay);
+		void Play(AudioClip* clip);
 
 		float GetPitch() const noexcept;
 		float GetGain() const noexcept;
