@@ -268,7 +268,8 @@ void FlappyBirdApp::RenderUI()
 		if (m_FirstLaunched)
 		{
 			m_UiRenderer->DrawImage(m_CharacterTextures[static_cast<int>(m_ElapsedTime * 5) % 3], { 0.0f, 48.0f }, { 160.0f, 128.0f });
-			m_UiRenderer->DrawTxt(m_PixelifySans, "v1.0.0", { 4.0, 4.0 }, Anchor::BottomRight);
+			m_UiRenderer->DrawTxt(m_PixelifySans, "Ali Efe GÜR", { 4.0, 4.0 }, Anchor::BottomLeft, 16.0f, { 0.25f, 0.25f, 0.25f, 0.8f });
+			m_UiRenderer->DrawTxt(m_PixelifySans, "v1.0.0", { 4.0, 4.0 }, Anchor::BottomRight, 12.0f, { 0.25f, 0.25f, 0.25f, 0.8f });
 			m_UiRenderer->DrawTxt(m_PixelifySans, "Press ENTER to Start Game", { 0.0f, -96.0f }, Anchor::MiddleCenter, 20.0f, { 0.05f, 0.05f, 0.05f, abs(sinf(m_ElapsedTime * 1.75f)) * 0.8f + 0.2f });
 		}
 		else
