@@ -50,9 +50,13 @@ FlappyBirdApp::~FlappyBirdApp()
 	delete m_DieSfx;
 	delete m_PointSfx;
 	delete m_SwooshSfx;
+	delete m_ThemeSong;
 
 	// Delete audio components
 	delete m_UiAudioSource;
+	delete m_DieAudioSource;
+	delete m_ScoreAudioSource;
+	delete m_ThemeAudioSource;
 
 	// Delete rendering components
 	delete m_Camera;
@@ -107,12 +111,15 @@ void FlappyBirdApp::Start()
 	m_DieAudioSource = new AudioSource();
 	m_ScoreAudioSource = new AudioSource();
 	m_ScoreAudioSource->SetGain(0.21f);
+	m_ThemeAudioSource = new AudioSource();
+	m_ThemeAudioSource->SetGain(0.75f);
+	m_ThemeAudioSource->SetLoop(true);
 
 	// Load sound effects
-	
 	m_DieSfx = new AudioClip("res/audio/die.ogg");
 	m_PointSfx = new AudioClip("res/audio/point.ogg");
 	m_SwooshSfx = new AudioClip("res/audio/swoosh.ogg");
+	m_ThemeSong = new AudioClip("res/audio/theme.mp3");
 
 	// Create game objects
 	m_Bg = new Background(m_BackgroundTexture, { -0.3f, 0.0f, 0.0f });
@@ -131,6 +138,9 @@ void FlappyBirdApp::Start()
 
 	// Random seed
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+	// Start theme music
+	m_ThemeAudioSource->Play(m_ThemeSong);
 }
   
 void FlappyBirdApp::Update()
