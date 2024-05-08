@@ -12,6 +12,18 @@ namespace Engine
 
 		void Play(const unsigned int bufferToPlay);
 
+		float GetPitch() const noexcept;
+		float GetGain() const noexcept;
+		glm::vec3 GetPosition() const noexcept;
+		glm::vec3 GetVelocity() const noexcept;
+		bool GetLoop() const noexcept;
+
+		void SetPitch(float pitch) noexcept;
+		void SetGain(float gain) noexcept;
+		void SetPosition(const glm::vec3& position) noexcept;
+		void SetVelocity(const glm::vec3& velocity) noexcept;
+		void SetLoop(bool loop) noexcept;
+
 	private:
 		unsigned int m_Source = 0;
 		float m_Pitch = 1.0f;

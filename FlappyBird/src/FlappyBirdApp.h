@@ -39,8 +39,13 @@ private:
 							*m_Righteous;
 	Engine::UIRenderer*	m_UiRenderer;
 	Engine::AudioDevice* m_AudioDevice = nullptr;
-	Engine::AudioSource* m_AudioSource = nullptr;
-	unsigned int m_ParadiseCity = 0;
+	Engine::AudioSource		*m_UiAudioSource = nullptr,
+							*m_DieAudioSource = nullptr,
+							*m_ScoreAudioSource = nullptr;
+	unsigned int	m_WingSfx = 0,
+					m_DieSfx = 0,
+					m_PointSfx = 0,
+					m_SwooshSfx = 0;
 	std::vector<Engine::Texture2D*>	m_CharacterTextures;
 	float m_ElapsedTime = 0.0f;
 

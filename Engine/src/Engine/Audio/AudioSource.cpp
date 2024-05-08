@@ -31,4 +31,36 @@ namespace Engine
 
 		alSourcePlay(m_Source);
 	}
+
+	float AudioSource::GetPitch() const noexcept { return m_Pitch; }
+	float AudioSource::GetGain() const noexcept { return m_Gain; }
+	glm::vec3 AudioSource::GetPosition() const noexcept { return m_Position; }
+	glm::vec3 AudioSource::GetVelocity() const noexcept { return m_Velocity; }
+	bool AudioSource::GetLoop() const noexcept { return m_Loop; }
+	
+	void AudioSource::SetPitch(float pitch) noexcept 
+	{ 
+		m_Pitch = pitch;
+		alSourcef(m_Source, AL_PITCH, pitch);
+	}
+	void AudioSource::SetGain(float gain) noexcept 
+	{ 
+		m_Gain = gain; 
+		alSourcef(m_Source, AL_GAIN, gain);
+	}
+	void AudioSource::SetPosition(const glm::vec3& position) noexcept
+	{
+		m_Position = position;
+		alSource3f(m_Source, AL_POSITION, position.x, position.y, position.z);
+	}
+	void AudioSource::SetVelocity(const glm::vec3& velocity) noexcept
+	{
+		m_Velocity = velocity;
+		alSource3f(m_Source, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
+	}
+	void AudioSource::SetLoop(bool loop) noexcept
+	{
+		m_Loop = loop;
+		alSourcei(m_Source, AL_LOOPING, loop);
+	}
 }

@@ -46,8 +46,14 @@ FlappyBirdApp::~FlappyBirdApp()
 	// Delete fonts
 	delete m_PixelifySans;
 
+	// Unload sound effects
+	SoundBuffer::Get()->RemoveSoundEffect(m_WingSfx);
+	SoundBuffer::Get()->RemoveSoundEffect(m_DieSfx);
+	SoundBuffer::Get()->RemoveSoundEffect(m_PointSfx);
+	SoundBuffer::Get()->RemoveSoundEffect(m_SwooshSfx);
+
 	// Delete audio components
-	delete m_AudioSource;
+	delete m_UiAudioSource;
 
 	// Delete rendering components
 	delete m_Camera;
@@ -96,10 +102,23 @@ void FlappyBirdApp::Start()
 	m_PixelifySans = new Font("res/fonts/PixelifySans.ttf", 128u, Texture2D::Filter::Point);
 	m_Righteous = new Font("res/fonts/Righteous.ttf", 128u);
 
+	// Initialize audio components
+	m_AudioDevice = AudioDevice::Get();
+	m_UiAudioSource = new AudioSource();
+	m_DieAudioSource = new AudioSource();
+	m_ScoreAudioSource = new AudioSource();
+	m_ScoreAudioSource->SetGain(0.21f);
+
+	// Load sound effects
+	m_WingSfx = SoundBuffer::Get()->AddSoundEffect("res/audio/wing.ogg");
+	m_DieSfx = SoundBuffer::Get()->AddSoundEffect("res/audio/die.ogg");
+	m_PointSfx = SoundBuffer::Get()->AddSoundEffect("res/audio/point.ogg");
+	m_SwooshSfx = SoundBuffer::Get()->AddSoundEffect("res/audio/swoosh.ogg");
+
 	// Create game objects
 	m_Bg = new Background(m_BackgroundTexture, { -0.3f, 0.0f, 0.0f });
-	m_Bird = new Bird(&m_CharacterTextures[0]);
-	m_Pipes = { 
+	m_Bird = new Bird(&m_CharacterTextures[0], m_WingSfx);
+	m_Pipes = {
 		new Pipe(m_PipeTexture, 5.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
 		new Pipe(m_PipeTexture, 7.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
 		new Pipe(m_PipeTexture, 9.0f,  { -1.0f, 0.0f, 0.0f }, m_Bird),
@@ -110,16 +129,6 @@ void FlappyBirdApp::Start()
 		new Pipe(m_PipeTexture, 19.0f, { -1.0f, 0.0f, 0.0f }, m_Bird),
 		new Pipe(m_PipeTexture, 21.0f, { -1.0f, 0.0f, 0.0f }, m_Bird)
 	};
-
-	// Initialize audio components
-	m_AudioDevice = AudioDevice::Get();
-	m_AudioSource = new AudioSource();
-
-	// Load sounds
-	m_ParadiseCity = SoundBuffer::Get()->AddSoundEffect("res/audio/paradise_city.mp3");
-
-	// Let's rock!
-	m_AudioSource->Play(m_ParadiseCity);
 
 	// Random seed
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
@@ -180,6 +189,8 @@ void FlappyBirdApp::Update()
 
 void FlappyBirdApp::StartGame()
 {
+	m_UiAudioSource->Play(m_SwooshSfx);
+
 	m_FirstLaunched = false;
 	m_GameRunning = true;
 	m_BirdBetweenGaps = false;
@@ -208,6 +219,8 @@ void FlappyBirdApp::ResetGame()
 	}
 
 	m_Score = 0;
+
+	m_DieAudioSource->Play(m_DieSfx);
 }
 
 void FlappyBirdApp::RenderObjects()
@@ -301,6 +314,7 @@ void FlappyBirdApp::OnBirdBetweenPipes(bool isCollide)
 		{
 			++m_Score;
 			m_BirdBetweenGaps = true;
+			m_ScoreAudioSource->Play(m_PointSfx);
 		}
 	}
 }

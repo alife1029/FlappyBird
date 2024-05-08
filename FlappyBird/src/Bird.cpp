@@ -2,11 +2,12 @@
 
 using namespace Engine;
 
-Bird::Bird(Texture2D** textures)
+Bird::Bird(Texture2D** textures, unsigned int wingSound)
 	:
-	m_Textures(textures), m_CurrentTexture(textures[0]), Position({0.0f}), m_Rotation(0.0f), m_Velocity({0.0f})
+	m_Textures(textures), m_CurrentTexture(textures[0]), Position({0.0f}), 
+	m_Rotation(0.0f), m_Velocity({0.0f}), m_WingSound(wingSound)
 {
-
+	m_AudioSource = new AudioSource();
 }
 
 void Bird::Start()
@@ -26,6 +27,7 @@ void Bird::Update(float timeElapsed)
 	if (Input::IsKeyJustPressed(Key::Space))
 	{
 		m_Velocity.y = 3.35f;
+		m_AudioSource->Play(m_WingSound);
 	}
 
 	m_Rotation = 45.0f * m_Velocity.y / 10.0f;

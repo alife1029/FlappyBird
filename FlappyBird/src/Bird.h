@@ -5,7 +5,7 @@
 class Bird
 {
 public:
-	Bird(Engine::Texture2D** textures);
+	Bird(Engine::Texture2D** textures, unsigned int wingSound);
 
 	void Start();
 	void Update(float timeElapsed);
@@ -19,4 +19,7 @@ private:
 	Engine::Texture2D* m_CurrentTexture;
 	glm::vec3 m_Velocity;
 	float m_Rotation;
+	unsigned int m_WingSound;
+
+	Engine::AudioSource* m_AudioSource;
 };
