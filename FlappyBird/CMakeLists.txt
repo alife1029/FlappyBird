@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(FlappyBird VERSION 0.0.1)
+project(FlappyBird VERSION 1.0.0)
 
 file(GLOB FLAPPY_PROJECT_SOURCES	src/**.h
 									src/**.cpp
