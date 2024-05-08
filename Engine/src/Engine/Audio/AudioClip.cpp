@@ -20,15 +20,13 @@ namespace Engine
 		sndFile = sf_open(audioFile.c_str(), SFM_READ, &sfInfo);
 		if (!sndFile)
 		{
-			// TODO: Throw custom error
-			fprintf(stderr, "Could not open audip in %s: %s\n", audioFile.c_str(), sf_strerror(sndFile));
+			throw ResourceNotFoundException(__LINE__, __FILE__, audioFile.c_str());
 		}
 
 		if (sfInfo.frames < 1 || sfInfo.frames >(sf_count_t)(INT_MAX / sizeof(short)) / sfInfo.channels)
 		{
-			// TODO: Throw custom error
-			fprintf(stderr, "Bad sample count in: %s (%" PRId64 ")\n", audioFile.c_str(), sfInfo.frames);
 			sf_close(sndFile);
+			throw BadSampleCountException(__LINE__, __FILE__, audioFile, sfInfo.frames);
 		}
 
 		// Get the sound format
@@ -48,9 +46,8 @@ namespace Engine
 
 		if (!m_Format)
 		{
-			// TODO: Throw custom exception
-			fprintf(stderr, "Unsupported channel count: %d\n", sfInfo.channels);
 			sf_close(sndFile);
+			throw UnsupportedChannelCountException(__LINE__, __FILE__, audioFile, sfInfo.channels);
 		}
 
 		// Decode the whole audio file to the buffer
@@ -61,9 +58,7 @@ namespace Engine
 		{
 			free(memBuf);
 			sf_close(sndFile);
-
-			// TODO: Throw custom exception
-			fprintf(stderr, "Failed to read samples in %s (%" PRId64 ")\n", audioFile.c_str(), numFrames);
+			throw BadSampleCountException(__LINE__, __FILE__, audioFile, sfInfo.frames);
 		}
 
 		numBytes = (ALsizei)(numFrames * sfInfo.channels) * (ALsizei)sizeof(short);
@@ -81,10 +76,10 @@ namespace Engine
 		err = alGetError();
 		if (err != AL_NO_ERROR)
 		{
-			// TODO: Throw custom error
-			fprintf(stderr, "OpenAL Error: %s\n", alGetString(err));
 			if (m_Buffer && alIsBuffer(m_Buffer))
 				alDeleteBuffers(1, &m_Buffer);
+
+			throw OpenALException(__LINE__, __FILE__, alGetString(err));
 		}
 	}
 
@@ -97,4 +92,87 @@ namespace Engine
 	{
 		return m_Buffer;
 	}
+
+#pragma region Exceptions
+
+	AudioClip::BadSampleCountException::BadSampleCountException(int line, const char* file, const std::string& audioFile, int64_t sampleCount)
+		:
+		EngineException(line, file), m_AudioFile(audioFile), m_SampleCount(sampleCount)
+	{
+	}
+	const char* AudioClip::BadSampleCountException::what() const noexcept
+	{
+		std::ostringstream oss;
+		oss << GetType() << std::endl
+			<< "[Audio File] " << GetAudioFile() << std::endl
+			<< "[Sample Count] " << GetSampleCount() << std::endl
+			<< GetOriginString();
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+	const char* AudioClip::BadSampleCountException::GetType() const noexcept
+	{
+		return "Bad Sample Count";
+	}
+	std::string AudioClip::BadSampleCountException::GetAudioFile() const noexcept
+	{
+		return m_AudioFile;
+	}
+	int64_t AudioClip::BadSampleCountException::GetSampleCount() const noexcept
+	{
+		return m_SampleCount;
+	}
+
+	AudioClip::UnsupportedChannelCountException::UnsupportedChannelCountException(int line, const char* file, const std::string& audioFile, int64_t channelCount)
+		:
+		EngineException(line, file), m_AudioFile(audioFile), m_ChannelCount(channelCount)
+	{
+	}
+	const char* AudioClip::UnsupportedChannelCountException::what() const noexcept
+	{
+		std::ostringstream oss;
+		oss << GetType() << std::endl
+			<< "[Audio File] " << GetAudioFile() << std::endl
+			<< "[Channel Count] " << GetChannelCount() << std::endl
+			<< GetOriginString();
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+	const char* AudioClip::UnsupportedChannelCountException::GetType() const noexcept
+	{
+		return "Unsupported Audio Channel";
+	}
+	std::string AudioClip::UnsupportedChannelCountException::GetAudioFile() const noexcept
+	{
+		return m_AudioFile;
+	}
+	int64_t AudioClip::UnsupportedChannelCountException::GetChannelCount() const noexcept
+	{
+		return m_ChannelCount;
+	}
+
+	AudioClip::OpenALException::OpenALException(int line, const char* file, const std::string& errorMessage)
+		:
+		EngineException(line, file), m_ErrorMessage(errorMessage)
+	{
+	}
+	const char* AudioClip::OpenALException::what() const noexcept
+	{
+		std::ostringstream oss;
+		oss << GetType() << std::endl
+			<< "[Error Message] " << GetErrorMessage() << std::endl
+			<< GetOriginString();
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+	const char* AudioClip::OpenALException::GetType() const noexcept
+	{
+		return "OpenAL Exception";
+	}
+	std::string AudioClip::OpenALException::GetErrorMessage() const noexcept
+	{
+		return m_ErrorMessage;
+	}
+
+#pragma endregion
 }

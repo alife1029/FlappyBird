@@ -16,21 +16,18 @@ namespace Engine
 		m_ALCDevice = alcOpenDevice(nullptr);	// nullptr = Get default device
 		if (!m_ALCDevice)
 		{
-			// TODO: Throw custom exception
-			throw "Failed to get sound device!";
+			throw Exception(__LINE__, __FILE__, "Failed to get sound device");
 		}
 
 		m_ALCContext = alcCreateContext(m_ALCDevice, nullptr);
 		if (!m_ALCContext)
 		{
-			// TODO: Throw custom exception
-			throw "Failed to set sound context";
+			throw Exception(__LINE__, __FILE__, "Failed to set sound context");
 		}
 
 		if (!alcMakeContextCurrent(m_ALCContext))
 		{
-			// TODO: Throw custom exception
-			throw "Failed to make context current";
+			throw Exception(__LINE__, __FILE__, "Failed to make context current");
 		}
 
 		const ALCchar* name = nullptr;
@@ -42,24 +39,31 @@ namespace Engine
 
 	AudioDevice::~AudioDevice()
 	{
-		if (!alcMakeContextCurrent(nullptr))
-		{
-			// TODO: Throw custom exception
-			throw "Failed to set context to nullptr";
-		}
-
+		alcMakeContextCurrent(nullptr);
 		alcDestroyContext(m_ALCContext);
+		alcCloseDevice(m_ALCDevice);
+	}
 
-		if (m_ALCContext)
-		{
-			// TODO: Throw custom exception
-			throw "Failed to unset during close";
-		}
-
-		if (!alcCloseDevice(m_ALCDevice))
-		{
-			// TODO: Throw custom exception
-			throw "Failed to close audio device";
-		}
+	AudioDevice::Exception::Exception(int line, const char* file, const std::string& errorMessage)
+		:
+		EngineException(line, file), m_ErrorMessage(errorMessage)
+	{
+	}
+	const char* AudioDevice::Exception::what() const noexcept
+	{
+		std::ostringstream oss;
+		oss << GetType() << std::endl
+			<< "[Error Message] " << GetErrorMessage() << std::endl
+			<< GetOriginString();
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+	const char* AudioDevice::Exception::GetType() const noexcept
+	{
+		return "Audio Device Exception";
+	}
+	std::string AudioDevice::Exception::GetErrorMessage() const noexcept
+	{
+		return m_ErrorMessage;
 	}
 }
