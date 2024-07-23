@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Engine/Utils/EngineException.h"
-#include "Engine/Renderer/OpenGLGraphics.h"
+#include "Engine/Renderer/Graphics.h"
 #include "Engine/Input/Keyboard.h"
 #include <Windows.h>
+
+#include <string>
 
 namespace Engine
 {
@@ -45,11 +47,11 @@ namespace Engine
 		int GetWidth() const noexcept;
 		int GetHeight() const noexcept; 
 		std::string GetTitle() const noexcept;
-		OpenGLGraphics* GetGfx() const noexcept;
+		Graphics* GetGfx() const noexcept;
 		HWND GetHWND() const noexcept;
 
 		void ProcessEvents();
-		void CreateGraphicsContext();
+		void CreateGraphicsContext(Graphics::Api rendererApi);
 
 	private:
 		int m_Width, m_Height;
@@ -57,7 +59,7 @@ namespace Engine
 		bool	m_IsFullscreen, 
 				m_IsShown,
 				m_HasFocus;
-		OpenGLGraphics* m_Graphics;
+		Graphics* m_Graphics;
 		Keyboard m_Keyboard;
 		HWND hWnd;
 

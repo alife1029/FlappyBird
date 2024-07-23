@@ -2,6 +2,7 @@
 
 #include "Window.h"
 #include "Engine/App/AppManager.h"
+#include "Engine/Platform/GL/GLGraphics.h"
 
 #include <imgui.h>
 #include <imgui_impl_win32.h>
@@ -148,7 +149,7 @@ namespace Engine
 	{
 		return m_title;
 	}
-	OpenGLGraphics* Window::GetGfx() const noexcept
+	Graphics* Window::GetGfx() const noexcept
 	{
 		return m_Graphics;
 	}
@@ -175,9 +176,9 @@ namespace Engine
 		}
 	}
 
-	void Window::CreateGraphicsContext()
+	void Window::CreateGraphicsContext(Graphics::Api rendererApi)
 	{
-		m_Graphics = new OpenGLGraphics(this);
+		if (rendererApi == Graphics::Api::OPENGL) m_Graphics = new GLGraphics(this);
 	}
 
 	LRESULT Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept

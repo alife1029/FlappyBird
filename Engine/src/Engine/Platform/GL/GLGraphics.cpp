@@ -1,5 +1,5 @@
 #include "engine_pch.h"
-#include "OpenGLGraphics.h"
+#include "GLGraphics.h"
 #include "Engine/App/Window.h"
 
 #define INIT_ERROR(_desc_) InitializationError(__LINE__, __FILE__, _desc_)
@@ -11,9 +11,9 @@ namespace Engine
 
 	extern int MAX_TEXTURES = 0;
 
-	OpenGLGraphics::OpenGLGraphics(Window* targetWindow)
+	GLGraphics::GLGraphics(Window* targetWindow)
 		:
-		m_TargetWindow(targetWindow)
+		Graphics(targetWindow)
 	{
 		PIXELFORMATDESCRIPTOR pfd = {
 			sizeof(PIXELFORMATDESCRIPTOR),
@@ -67,17 +67,20 @@ namespace Engine
 		// Get graphical properties
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MAX_TEXTURES);
 
+		// Set renderer api as OpenGL
+		m_RendererAPI = Api::OPENGL;
+
 		std::cout << "OpenGL Version: " << GLVersion.major << "." << GLVersion.minor << std::endl;
 	}
 
-	OpenGLGraphics::~OpenGLGraphics()
+	GLGraphics::~GLGraphics()
 	{
 		wglMakeCurrent(nullptr, nullptr);
 		wglDeleteContext(m_Context);
 		ReleaseDC(m_TargetWindow->GetHWND(), m_Device);
 	}
 
-	void OpenGLGraphics::EndFrame()
+	void GLGraphics::EndFrame()
 	{
 		if (SwapBuffers(m_Device) == FALSE)
 		{
@@ -85,13 +88,13 @@ namespace Engine
 		}
 	}
 
-	void OpenGLGraphics::ClearBuffer(float red, float green, float blue, float alpha) noexcept
+	void GLGraphics::ClearBuffer(float red, float green, float blue, float alpha) noexcept
 	{
 		glClearColor(red, green, blue, alpha);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	void OpenGLGraphics::DrawIndexed(unsigned int count)
+	void GLGraphics::DrawIndexed(unsigned int count)
 	{
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, (const void*)0);
 	}
@@ -99,7 +102,7 @@ namespace Engine
 
 #pragma region Exceptions
 	
-	const char* OpenGLGraphics::FramebufferSwapError::what() const noexcept
+	const char* GLGraphics::FramebufferSwapError::what() const noexcept
 	{
 		std::ostringstream oss;
 		oss << GetType() << std::endl
@@ -109,7 +112,7 @@ namespace Engine
 		return m_WhatBuffer.c_str();
 	}
 
-	const char* OpenGLGraphics::FramebufferSwapError::GetType() const noexcept
+	const char* GLGraphics::FramebufferSwapError::GetType() const noexcept
 	{
 		return "OpenGL Graphics Framebuffer Swap Error";
 	}

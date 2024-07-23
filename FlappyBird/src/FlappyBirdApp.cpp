@@ -76,7 +76,7 @@ void FlappyBirdApp::Start()
 	Input::SetupEventWindow(m_Window);
 
 	m_Window->Show();
-	m_Window->CreateGraphicsContext();
+	m_Window->CreateGraphicsContext(Graphics::Api::OPENGL);
 
 	// Initialize ImGui
 	ImGuiManager::Initialize(m_Window);

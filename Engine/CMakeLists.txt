@@ -20,7 +20,11 @@ file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
 									src/Engine/Utils/**.h
 									src/Engine/Utils/**.cpp
 									src/Engine/Input/**.h
-									src/Engine/Input/**.cpp)
+									src/Engine/Input/**.cpp
+									src/Engine/Platform/GL/**.h
+									src/Engine/Platform/GL/**.cpp
+									src/Engine/Platform/D3D/**.h
+									src/Engine/Platform/D3D/**.cpp)
 
 add_library(${PROJECT_NAME} ${ENGINE_PROJECT_SOURCES})
 

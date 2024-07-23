@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Engine/Renderer/Graphics.h"
 #include "Engine/Utils/EngineException.h"
 
 #include <Windows.h>
@@ -8,7 +9,7 @@ namespace Engine
 {
 	class Window;
 
-	class OpenGLGraphics
+	class GLGraphics : public Graphics
 	{
 	public:
 		class FramebufferSwapError : public EngineException
@@ -20,10 +21,10 @@ namespace Engine
 		};
 
 	public:
-		OpenGLGraphics(Window* targetWindow);
-		OpenGLGraphics(const OpenGLGraphics&) = delete;
-		OpenGLGraphics& operator=(const OpenGLGraphics&) = delete;
-		~OpenGLGraphics();
+		GLGraphics(Window* targetWindow);
+		GLGraphics(const GLGraphics&) = delete;
+		GLGraphics& operator=(const GLGraphics&) = delete;
+		~GLGraphics();
 
 		void EndFrame();
 		void ClearBuffer(float red, float green, float blue, float alpha) noexcept;
@@ -32,6 +33,5 @@ namespace Engine
 	private:
 		HGLRC	m_Context;
 		HDC		m_Device;
-		Window*	m_TargetWindow;
 	};
 }
