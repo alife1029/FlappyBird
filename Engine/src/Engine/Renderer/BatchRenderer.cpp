@@ -1,6 +1,8 @@
 #include "engine_pch.h"
 #include "BatchRenderer.h"
 #include "Stats.h"
+#include "Engine/App/AppManager.h"
+#include "Engine/Platform/GL/GLShader.h"
 
 #define DEFAULT_SCALE glm::vec3 { 1.0f, 1.0f, 0.0f }
 #define DEFAULT_ROTATION 0.0f
@@ -13,6 +15,9 @@ namespace Engine
 
 	BatchRenderer::BatchRenderer(Shader* shader)
 	{
+		// Get target api
+		m_TargetAPI = AppManager::GetRunningApplication()->GetWindow()->GetGfx()->GetAPI();
+
 		m_ShaderProgram = shader;
 
 		m_QuadBuffer = new Vertex[QUAD_PER_BATCH];
@@ -105,9 +110,12 @@ namespace Engine
 			samplers[i] = i;
 		}
 
-		// Update uniform variables
-		m_ShaderProgram->SetUniformMatrix4("u_ViewProj", m_ViewProj);
-		m_ShaderProgram->SetUniformIntArray("u_Samplers", samplers, m_TextureSlotIndex);
+		// Update uniform variables (for OpenGL)
+		if (m_TargetAPI == Graphics::Api::OPENGL) 
+		{
+			((GLShader*)m_ShaderProgram)->SetUniformMatrix4("u_ViewProj", m_ViewProj);
+			((GLShader*)m_ShaderProgram)->SetUniformIntArray("u_Samplers", samplers, m_TextureSlotIndex);
+		}
 
 		// Bind
 		glBindVertexArray(m_VAO);

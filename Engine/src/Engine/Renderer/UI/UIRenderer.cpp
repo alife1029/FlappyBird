@@ -3,6 +3,8 @@
 #include "Font.h"
 #include "../Stats.h"
 #include "Engine/Utils/EngineException.h"
+#include "Engine/App/AppManager.h"
+#include "Engine/Platform/GL/GLShader.h"
 
 namespace Engine
 {
@@ -11,6 +13,8 @@ namespace Engine
 
 	UIRenderer::UIRenderer(Shader* textShader, Shader* imageShader)
 	{
+		m_TargetApi = AppManager::GetRunningApplication()->GetWindow()->GetGfx()->GetAPI();
+
 		InitializeTextRenderer(textShader);
 		InitializeImageRenderer(imageShader);
 	}
@@ -465,8 +469,11 @@ namespace Engine
 		}
 
 		// Update uniform variables
-		m_TextShader->SetUniformVec2("u_WindowSize", { static_cast<float>(m_WindowDimensions.x), static_cast<float>(m_WindowDimensions.y) });
-		m_TextShader->SetUniformIntArray("u_Samplers", samplers, m_TextTextureSlotIndex);
+		if (m_TargetApi == Graphics::Api::OPENGL)
+		{
+			((GLShader*)m_TextShader)->SetUniformVec2("u_WindowSize", {static_cast<float>(m_WindowDimensions.x), static_cast<float>(m_WindowDimensions.y)});
+			((GLShader*)m_TextShader)->SetUniformIntArray("u_Samplers", samplers, m_TextTextureSlotIndex);
+		}
 
 		// Binding
 		glBindVertexArray(m_TextVAO);
@@ -502,8 +509,11 @@ namespace Engine
 		}
 
 		// Update uniform variables
-		m_ImageShader->SetUniformVec2("u_WindowSize", { static_cast<float>(m_WindowDimensions.x), static_cast<float>(m_WindowDimensions.y) });
-		m_ImageShader->SetUniformIntArray("u_Samplers", samplers, m_ImageTextureSlotIndex);
+		if (m_TargetApi == Graphics::Api::OPENGL)
+		{
+			((GLShader*)m_ImageShader)->SetUniformVec2("u_WindowSize", { static_cast<float>(m_WindowDimensions.x), static_cast<float>(m_WindowDimensions.y) });
+			((GLShader*)m_ImageShader)->SetUniformIntArray("u_Samplers", samplers, m_ImageTextureSlotIndex);
+		}
 
 		// Binding
 		glBindVertexArray(m_ImageVAO);

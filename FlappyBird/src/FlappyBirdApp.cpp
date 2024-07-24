@@ -1,4 +1,5 @@
 #include "FlappyBirdApp.h"
+#include <Engine/Platform/GL/GLShader.h>
 #include <ctime>
 #include <cstdlib>
 
@@ -82,9 +83,12 @@ void FlappyBirdApp::Start()
 	ImGuiManager::Initialize(m_Window);
 
 	// Create rendering components
-	m_Shader = new Shader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
-	m_TextShader = new Shader("res/shaders/ui_vs.glsl", "res/shaders/text_fs.glsl");
-	m_UiImageShader = new Shader("res/shaders/ui_vs.glsl", "res/shaders/sprite_fs.glsl");
+	if (m_Window->GetGfx()->GetAPI() == Graphics::Api::OPENGL) 
+	{
+		m_Shader = new GLShader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
+		m_TextShader = new GLShader("res/shaders/ui_vs.glsl", "res/shaders/text_fs.glsl");
+		m_UiImageShader = new GLShader("res/shaders/ui_vs.glsl", "res/shaders/sprite_fs.glsl");
+	}
 	m_Renderer = new BatchRenderer(m_Shader);
 	m_UiRenderer = new UIRenderer(m_TextShader, m_UiImageShader);
 	m_Viewport = new Viewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());

@@ -3,6 +3,7 @@
 #include "Texture2D.h"
 #include "Shader.h"
 #include "Vertex.h"
+#include "Graphics.h"
 
 #include <glm/glm.hpp>
 
@@ -34,5 +35,6 @@ namespace Engine
 					m_TextureSlotIndex = 0;
 		Shader*		m_ShaderProgram = nullptr;
 		glm::mat4	m_ViewProj{ 1.0f };
+		Graphics::Api	m_TargetAPI;
 	};
 }

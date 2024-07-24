@@ -3,6 +3,7 @@
 #include "Font.h"
 #include "../Shader.h"
 #include "../Vertex.h"
+#include "../Graphics.h"
 
 #include <string>
 
@@ -63,5 +64,6 @@ namespace Engine
 		Shader		*m_TextShader			= nullptr,
 					*m_ImageShader			= nullptr;
 		glm::ivec2	m_WindowDimensions		= glm::ivec2{ 0 };
+		Graphics::Api	m_TargetApi;
 	};
 }
