@@ -3,21 +3,26 @@
 
 namespace Engine
 {
-	Viewport::Viewport()
+	Viewport::Viewport(Window* targetWindow)
 		:
-		m_X(0), m_Y(0), m_W(640), m_H(480)
+		m_TargetWindow(targetWindow), m_X(0), m_Y(0), m_W(640), m_H(480)
 	{
 	}
 
-	Viewport::Viewport(int x, int y, int w, int h)
+	Viewport::Viewport(Window* targetWindow, int x, int y, int w, int h)
 		:
-		m_X(x), m_Y(y), m_W(w), m_H(h)
+		m_TargetWindow(targetWindow), m_X(x), m_Y(y), m_W(w), m_H(h)
 	{
 	}
 
 	void Viewport::Apply() const noexcept
 	{
-		glViewport(m_X, m_Y, m_W, m_H);
+		// TODO: Implement Direct3D11 Viewport
+
+		switch (m_TargetWindow->GetGfx()->GetAPI())
+		{
+		case Graphics::Api::OPENGL: glViewport(m_X, m_Y, m_W, m_H); break;
+		}
 	}
 
 	int Viewport::GetX() const noexcept

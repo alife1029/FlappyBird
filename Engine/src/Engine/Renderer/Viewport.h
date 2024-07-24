@@ -1,12 +1,14 @@
 #pragma once
 
+#include "Engine/App/Window.h"
+
 namespace Engine
 {
 	class Viewport
 	{
 	public:
-		Viewport();
-		Viewport(int x, int y, int w, int h);
+		Viewport(Window* targetWindow);
+		Viewport(Window* targetWindow, int x, int y, int w, int h);
 
 		void Apply() const noexcept;
 
@@ -23,5 +25,6 @@ namespace Engine
 			m_Y,
 			m_W,
 			m_H;
+		Window* m_TargetWindow;
 	};
 }
