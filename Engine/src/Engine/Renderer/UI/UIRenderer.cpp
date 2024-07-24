@@ -5,6 +5,7 @@
 #include "Engine/Utils/EngineException.h"
 #include "Engine/App/AppManager.h"
 #include "Engine/Platform/GL/GLShader.h"
+#include "Engine/Platform/GL/GLTexture2D.h"
 
 namespace Engine
 {
@@ -50,7 +51,7 @@ namespace Engine
 		float texIndex = -1.0f;
 		for (uint32_t i = 0; i < m_ImageTextureSlotIndex; i++)
 		{
-			if (m_ImageTextureSlots[i] == img->GetID())
+			if (m_ImageTextureSlots[i] == ((GLTexture2D*)img)->GetID())
 			{
 				texIndex = static_cast<float>(i);
 				break;
@@ -67,7 +68,7 @@ namespace Engine
 			}
 
 			texIndex = static_cast<float>(m_ImageTextureSlotIndex);
-			m_ImageTextureSlots[m_ImageTextureSlotIndex] = img->GetID();
+			m_ImageTextureSlots[m_ImageTextureSlotIndex] = ((GLTexture2D*)img)->GetID();
 			++m_ImageTextureSlotIndex;
 		}
 

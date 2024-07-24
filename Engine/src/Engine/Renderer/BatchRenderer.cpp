@@ -3,6 +3,7 @@
 #include "Stats.h"
 #include "Engine/App/AppManager.h"
 #include "Engine/Platform/GL/GLShader.h"
+#include "Engine/Platform/GL/GLTexture2D.h"
 
 #define DEFAULT_SCALE glm::vec3 { 1.0f, 1.0f, 0.0f }
 #define DEFAULT_ROTATION 0.0f
@@ -143,7 +144,7 @@ namespace Engine
 		float texIndex = -1.0f;
 		for (uint32_t i = 0; i < m_TextureSlotIndex; i++)
 		{
-			if (m_TextureSlots[i] == texture->GetID())
+			if (m_TextureSlots[i] == ((GLTexture2D*)texture)->GetID())
 			{
 				texIndex = static_cast<float>(i);
 				break;
@@ -160,7 +161,7 @@ namespace Engine
 			}
 
 			texIndex = static_cast<float>(m_TextureSlotIndex);
-			m_TextureSlots[m_TextureSlotIndex] = texture->GetID();
+			m_TextureSlots[m_TextureSlotIndex] = ((GLTexture2D*)texture)->GetID();
 			++m_TextureSlotIndex;
 		}
 

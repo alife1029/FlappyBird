@@ -1,5 +1,6 @@
 #include "FlappyBirdApp.h"
 #include <Engine/Platform/GL/GLShader.h>
+#include <Engine/Platform/GL/GLTexture2D.h>
 #include <ctime>
 #include <cstdlib>
 
@@ -91,18 +92,21 @@ void FlappyBirdApp::Start()
 	}
 	m_Renderer = new BatchRenderer(m_Shader);
 	m_UiRenderer = new UIRenderer(m_TextShader, m_UiImageShader);
-	m_Viewport = new Viewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
+	m_Viewport = new Viewport(m_Window, 0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	m_Camera = new Camera(m_Viewport);
 	m_Camera->zNear = 0.0f;
 
 	// Loading textures
-	m_BackgroundTexture = new Texture2D("res/sprites/background-day.png");
-	m_PipeTexture = new Texture2D("res/sprites/pipe-green.png");
-	m_CharacterTextures = {
-		new Texture2D("res/sprites/yellowbird-downflap.png", 100u, false, Texture2D::Filter::Point),
-		new Texture2D("res/sprites/yellowbird-midflap.png", 100u, false, Texture2D::Filter::Point),
-		new Texture2D("res/sprites/yellowbird-upflap.png", 100u, false, Texture2D::Filter::Point),
-	};
+	if (m_Window->GetGfx()->GetAPI() == Graphics::Api::OPENGL)
+	{
+		m_BackgroundTexture = new GLTexture2D("res/sprites/background-day.png");
+		m_PipeTexture = new GLTexture2D("res/sprites/pipe-green.png");
+		m_CharacterTextures = {
+			new GLTexture2D("res/sprites/yellowbird-downflap.png", 100u, false, Texture2D::Filter::Point),
+			new GLTexture2D("res/sprites/yellowbird-midflap.png", 100u, false, Texture2D::Filter::Point),
+			new GLTexture2D("res/sprites/yellowbird-upflap.png", 100u, false, Texture2D::Filter::Point),
+		};
+	}
 	m_WhiteTexture = Texture2D::LoadWhiteTexture();
 
 	// Loading fonts

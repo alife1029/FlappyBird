@@ -19,9 +19,9 @@ namespace Engine
 		Texture2D(const std::string& imageFile, unsigned int pixelPerUnit = 100u, bool forceRGBA = false, Filter filter = Filter::Bilinear, Wrap wrap = Wrap::Clamp);
 		Texture2D(const Texture2D&) = delete;
 		Texture2D& operator=(const Texture2D&) = delete;
-		~Texture2D();
+		virtual ~Texture2D();
 
-		void Bind() const noexcept;
+		virtual void Bind() const noexcept;
 
 		int GetWidth() const noexcept;
 		int GetHeight() const noexcept;
@@ -29,22 +29,20 @@ namespace Engine
 		unsigned int PixelPerUnit() const noexcept;
 		Filter GetFilterMode() const noexcept;
 		Wrap GetWrapMode() const noexcept;
-		uint32_t GetID() const noexcept;
 
 		void SetPixelPerUnit(int ppu) noexcept;
-		void ChangeFilterMode(Filter f) noexcept;
-		void ChangeWrapMode(Wrap w) noexcept;
+		virtual void ChangeFilterMode(Filter f) noexcept;
+		virtual void ChangeWrapMode(Wrap w) noexcept;
 
-	private:
-		void GenerateTextureFromBytes(unsigned char* pixels, int w, int h, int ch, Filter f, Wrap wrp);
+	protected:
+		virtual void GenerateTextureFromBytes(unsigned char* pixels, int w, int h, int ch, Filter f, Wrap wrp);
 
-	private:
+	protected:
 		int				m_Width,
 						m_Height,
 						m_ChannelCount;
 		unsigned int	m_PixelPerUnit;
 		Filter			m_Filter;
 		Wrap			m_Wrap;
-		uint32_t		m_TextureID = 0;
 	};
 }
