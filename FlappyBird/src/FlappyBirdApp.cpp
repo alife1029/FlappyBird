@@ -1,6 +1,4 @@
 #include "FlappyBirdApp.h"
-#include <Engine/Platform/GL/GLShader.h>
-#include <Engine/Platform/GL/GLTexture2D.h>
 #include <ctime>
 #include <cstdlib>
 
@@ -80,16 +78,15 @@ void FlappyBirdApp::Start()
 	m_Window->Show();
 	m_Window->CreateGraphicsContext(Graphics::Api::OPENGL);
 
+	Graphics* gfx = m_Window->GetGfx();
+
 	// Initialize ImGui
 	ImGuiManager::Initialize(m_Window);
 
 	// Create rendering components
-	if (m_Window->GetGfx()->GetAPI() == Graphics::Api::OPENGL) 
-	{
-		m_Shader = new GLShader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
-		m_TextShader = new GLShader("res/shaders/ui_vs.glsl", "res/shaders/text_fs.glsl");
-		m_UiImageShader = new GLShader("res/shaders/ui_vs.glsl", "res/shaders/sprite_fs.glsl");
-	}
+	m_Shader = gfx->CreateShader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
+	m_TextShader = gfx->CreateShader("res/shaders/ui_vs.glsl", "res/shaders/text_fs.glsl");
+	m_UiImageShader = gfx->CreateShader("res/shaders/ui_vs.glsl", "res/shaders/sprite_fs.glsl");
 	m_Renderer = new BatchRenderer(m_Shader);
 	m_UiRenderer = new UIRenderer(m_TextShader, m_UiImageShader);
 	m_Viewport = new Viewport(m_Window, 0, 0, m_Window->GetWidth(), m_Window->GetHeight());
@@ -97,16 +94,13 @@ void FlappyBirdApp::Start()
 	m_Camera->zNear = 0.0f;
 
 	// Loading textures
-	if (m_Window->GetGfx()->GetAPI() == Graphics::Api::OPENGL)
-	{
-		m_BackgroundTexture = new GLTexture2D("res/sprites/background-day.png");
-		m_PipeTexture = new GLTexture2D("res/sprites/pipe-green.png");
-		m_CharacterTextures = {
-			new GLTexture2D("res/sprites/yellowbird-downflap.png", 100u, false, Texture2D::Filter::Point),
-			new GLTexture2D("res/sprites/yellowbird-midflap.png", 100u, false, Texture2D::Filter::Point),
-			new GLTexture2D("res/sprites/yellowbird-upflap.png", 100u, false, Texture2D::Filter::Point),
-		};
-	}
+	m_BackgroundTexture = gfx->CreateTexture2D("res/sprites/background-day.png");
+	m_PipeTexture = gfx->CreateTexture2D("res/sprites/pipe-green.png");
+	m_CharacterTextures = {
+		gfx->CreateTexture2D("res/sprites/yellowbird-downflap.png", 100u, false, Texture2D::Filter::Point),
+		gfx->CreateTexture2D("res/sprites/yellowbird-midflap.png", 100u, false, Texture2D::Filter::Point),
+		gfx->CreateTexture2D("res/sprites/yellowbird-upflap.png", 100u, false, Texture2D::Filter::Point),
+	};
 	m_WhiteTexture = Texture2D::LoadWhiteTexture();
 
 	// Loading fonts
