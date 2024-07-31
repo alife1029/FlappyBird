@@ -3,6 +3,7 @@
 
 #include "Engine/Platform/GL/GLShader.h"
 #include "Engine/Platform/GL/GLTexture2D.h"
+#include "Engine/Platform/GL/GLBatchRenderer.h"
 
 namespace Engine
 {
@@ -80,6 +81,23 @@ namespace Engine
 			break;
 		default:
 			// TODO: Throw exception
+			break;
+		}
+
+		return nullptr;
+	}
+
+	BatchRenderer* Graphics::CreateBatchRenderer(Shader* shader) const
+	{
+		switch (m_RendererAPI)
+		{
+		case Engine::Graphics::Api::D3D11:
+			// TODO: Create D3D11 Batch Renderer
+			break;
+		case Engine::Graphics::Api::OPENGL:
+			return new GLBatchRenderer(shader);
+		default:
+			// TODO: Throw error
 			break;
 		}
 

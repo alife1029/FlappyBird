@@ -87,7 +87,7 @@ void FlappyBirdApp::Start()
 	m_Shader = gfx->CreateShader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
 	m_TextShader = gfx->CreateShader("res/shaders/ui_vs.glsl", "res/shaders/text_fs.glsl");
 	m_UiImageShader = gfx->CreateShader("res/shaders/ui_vs.glsl", "res/shaders/sprite_fs.glsl");
-	m_Renderer = new BatchRenderer(m_Shader);
+	m_Renderer = gfx->CreateBatchRenderer(m_Shader);
 	m_UiRenderer = new UIRenderer(m_TextShader, m_UiImageShader);
 	m_Viewport = new Viewport(m_Window, 0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	m_Camera = new Camera(m_Viewport);
