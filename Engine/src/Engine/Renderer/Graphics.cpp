@@ -4,6 +4,7 @@
 #include "Engine/Platform/GL/GLShader.h"
 #include "Engine/Platform/GL/GLTexture2D.h"
 #include "Engine/Platform/GL/GLBatchRenderer.h"
+#include "Engine/Platform/GL/GLUIRenderer.h"
 
 namespace Engine
 {
@@ -96,6 +97,23 @@ namespace Engine
 			break;
 		case Engine::Graphics::Api::OPENGL:
 			return new GLBatchRenderer(shader);
+		default:
+			// TODO: Throw error
+			break;
+		}
+
+		return nullptr;
+	}
+
+	UIRenderer* Graphics::CreateUIRenderer(Shader* textShader, Shader* imageShader) const
+	{
+		switch (m_RendererAPI)
+		{
+		case Engine::Graphics::Api::D3D11:
+			// TODO: Create D3D11 UI Renderer
+			break;
+		case Engine::Graphics::Api::OPENGL:
+			return new GLUIRenderer(textShader, imageShader);
 		default:
 			// TODO: Throw error
 			break;

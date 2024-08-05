@@ -1,6 +1,8 @@
 #include "engine_pch.h"
 #include "Font.h"
 #include "Engine/Utils/EngineException.h"
+#include "Engine/App/AppManager.h"
+#include "Engine/Platform/GL/GLTexture2D.h"
 
 namespace Engine
 {
@@ -20,42 +22,28 @@ namespace Engine
 			ftInitialized = true;
 		}
 
+		Graphics* gfx = AppManager::GetRunningApplication()->GetWindow()->GetGfx();
+
 		FT_Face fontFace;
 		if (FT_New_Face(ft, path.c_str(), 0, &fontFace))
 			throw ResourceNotFoundException(__LINE__, __FILE__, path);
 
 		FT_Set_Pixel_Sizes(fontFace, 0, fontSize);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		
+		if (gfx->GetAPI() == Graphics::Api::OPENGL) glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		m_FontSize = 0u;
-
+		
 		for (unsigned char c = 0; c < 255; c++)
 		{
 			if (FT_Load_Char(fontFace, c, FT_LOAD_RENDER))
 				continue;
 
 			// Generate texture
-			uint32_t texture;
-			glGenTextures(1, &texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, fontFace->glyph->bitmap.width, fontFace->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, fontFace->glyph->bitmap.buffer);
-
-			// Set texture parameters
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			switch (filterMode)
-			{
-			case Engine::Texture2D::Filter::Point:
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				break;
-
-			case Engine::Texture2D::Filter::Trilinear:
-			case Engine::Texture2D::Filter::Bilinear:
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				break;
-			}
+			Texture2D* texture = gfx->CreateTexture2D(
+				(unsigned char*)fontFace->glyph->bitmap.buffer,
+				fontFace->glyph->bitmap.width, fontFace->glyph->bitmap.rows,
+				1, 1, filterMode);
 
 			// Store character
 			Character _c = {
@@ -69,8 +57,6 @@ namespace Engine
 			if (static_cast<unsigned int>(_c.GlyphSize.y) > m_FontSize)
 				m_FontSize = _c.GlyphSize.y;
 		}
-
-		glBindTexture(GL_TEXTURE_2D, NULL);
 
 		// Cleanup
 		FT_Done_Face(fontFace);
@@ -86,15 +72,24 @@ namespace Engine
 			if (m_Characters.count(i))
 			{
 				Character c = m_Characters[i];
-				glDeleteTextures(1, &c.TextureID);
+				delete c.Texture;
 			}
 		}
 
-		--fontInstanceCount;
-		if (fontInstanceCount == 0)
+		if (--fontInstanceCount == 0)
 		{
 			FT_Done_FreeType(ft);
 			ftInitialized = false;
 		}
+	}
+
+	Font::Character Font::GetChar(char c) noexcept
+	{
+		return m_Characters[c];
+	}
+
+	unsigned int Font::GetFontSize() const noexcept
+	{
+		return m_FontSize;
 	}
 }

@@ -11,11 +11,10 @@ namespace Engine
 {
 	class Font
 	{
-		friend class UIRenderer;
 	public:
 		struct Character
 		{
-			uint32_t	TextureID;
+			Texture2D*	Texture;
 			glm::ivec2	GlyphSize;
 			glm::ivec2	Bearing;	// Offset from the baseline to left-top of the glyph
 			uint32_t	Advance;	// Horizontal offset to advance	to next glyph
@@ -24,6 +23,9 @@ namespace Engine
 	public:
 		Font(const std::string& path, unsigned int fontSize = 64, Texture2D::Filter filterMode = Texture2D::Filter::Bilinear);
 		~Font();
+
+		Character GetChar(char c) noexcept;
+		unsigned int GetFontSize() const noexcept;
 
 	private:
 		std::map<char, Character> m_Characters;
