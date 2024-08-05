@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Engine/App/AppManager.h"
 #include "Engine/Platform/GL/GLGraphics.h"
+#include "Engine/Platform/D3D11/DX11Graphics.h"
 
 #include <imgui.h>
 #include <imgui_impl_win32.h>
@@ -179,6 +180,7 @@ namespace Engine
 	void Window::CreateGraphicsContext(Graphics::Api rendererApi)
 	{
 		if (rendererApi == Graphics::Api::OPENGL) m_Graphics = new GLGraphics(this);
+		else if (rendererApi == Graphics::Api::D3D11) m_Graphics = new DX11Graphics(this);
 	}
 
 	LRESULT Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept

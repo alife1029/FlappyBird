@@ -26,9 +26,9 @@ namespace Engine
 		GLGraphics& operator=(const GLGraphics&) = delete;
 		~GLGraphics();
 
-		void EndFrame();
-		void ClearBuffer(float red, float green, float blue, float alpha) noexcept;
-		void DrawIndexed(unsigned int count);
+		void EndFrame() override;
+		void ClearBuffer(float red, float green, float blue, float alpha) noexcept override;
+		void DrawIndexed(unsigned int count) override;
 
 	private:
 		HGLRC	m_Context;

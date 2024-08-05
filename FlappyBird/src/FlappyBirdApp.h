@@ -26,7 +26,7 @@ private:
 	void OnBirdBetweenPipes(bool isCollide);
 
 private:
-	Engine::Shader			*m_Shader,
+	Engine::Shader* m_Shader,
 							*m_TextShader,
 							*m_UiImageShader;
 	Engine::BatchRenderer*	m_Renderer;

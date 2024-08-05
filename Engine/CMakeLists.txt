@@ -6,6 +6,7 @@ project(Engine VERSION 1.0.0)
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/stb)
 add_subdirectory(vendor/imgui)
+add_subdirectory(vendor/dxerr)
 
 # Source files
 file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
@@ -23,8 +24,8 @@ file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
 									src/Engine/Input/**.cpp
 									src/Engine/Platform/GL/**.h
 									src/Engine/Platform/GL/**.cpp
-									src/Engine/Platform/D3D/**.h
-									src/Engine/Platform/D3D/**.cpp)
+									src/Engine/Platform/D3D11/**.h
+									src/Engine/Platform/D3D11/**.cpp)
 
 add_library(${PROJECT_NAME} ${ENGINE_PROJECT_SOURCES})
 
@@ -45,6 +46,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE	glad
 												stb
 												opengl32
 												imgui
+												dxerr
+												d3d11
 												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/freetype/lib/freetype.lib
 												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/openal/lib/OpenAL32.lib
 												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/sndfile/lib/sndfile.lib)

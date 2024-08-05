@@ -12,7 +12,7 @@ FlappyBirdApp::FlappyBirdApp()
 	m_UiImageShader(nullptr)
 {
 	m_Window = new Window(800, 600, "Flappy Bird", false);
-
+	/*
 	// Read high score
 	try
 	{
@@ -23,10 +23,12 @@ FlappyBirdApp::FlappyBirdApp()
 	{
 		m_HiScore = 0;
 	}
+	*/
 }
 
 FlappyBirdApp::~FlappyBirdApp()
 {
+	/*
 	// Shutdown ImGui
 	ImGuiManager::Shutdown();
 
@@ -67,6 +69,7 @@ FlappyBirdApp::~FlappyBirdApp()
 	delete m_UiRenderer;
 	delete m_Renderer;
 	delete m_Window;	
+	*/
 }
 
 void FlappyBirdApp::Start()
@@ -76,10 +79,12 @@ void FlappyBirdApp::Start()
 	Input::SetupEventWindow(m_Window);
 
 	m_Window->Show();
-	m_Window->CreateGraphicsContext(Graphics::Api::OPENGL);
+	//m_Window->CreateGraphicsContext(Graphics::Api::OPENGL);
+	m_Window->CreateGraphicsContext(Graphics::Api::D3D11);
 
 	Graphics* gfx = m_Window->GetGfx();
 
+	/*
 	// Initialize ImGui
 	ImGuiManager::Initialize(m_Window);
 
@@ -143,12 +148,17 @@ void FlappyBirdApp::Start()
 
 	// Start theme music
 	m_ThemeAudioSource->Play(m_ThemeSong);
+	*/
 }
   
 void FlappyBirdApp::Update()
 {
 	App::Update();
 
+	Graphics* gfx = m_Window->GetGfx();
+	gfx->ClearBuffer(sinf(m_ElapsedTime), cosf(m_ElapsedTime / 2.0f), sinf(m_ElapsedTime / 7.25f), 1.0f);
+
+	/*
 	// Game logic update	
 	if (m_GameRunning)
 	{
@@ -188,13 +198,13 @@ void FlappyBirdApp::Update()
 #ifdef _DEBUG
 	RenderImGui();
 #endif
-
+	*/
 	m_Window->GetGfx()->EndFrame();
 	m_Window->ProcessEvents();
-
+	/*
 	m_Viewport->SetDimensions(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	m_Viewport->Apply();
-
+	*/
 	m_ElapsedTime += Time::Delta();
 }
 
