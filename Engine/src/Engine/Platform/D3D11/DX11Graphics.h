@@ -38,6 +38,9 @@ namespace Engine
 		void ClearBuffer(float red, float green, float blue, float alpha) noexcept override;
 		void DrawIndexed(unsigned int count) override;
 
+		ID3D11Device* GetDevice() const noexcept;
+		ID3D11DeviceContext* GetContext() const noexcept;
+
 	private:
 		ID3D11Device* m_Device;
 		ID3D11DeviceContext* m_Context;

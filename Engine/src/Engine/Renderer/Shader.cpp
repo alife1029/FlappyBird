@@ -10,6 +10,6 @@ namespace Engine
 	{	
 	}
 	void Shader::Bind() const noexcept
-	{	
+	{
 	}
 }

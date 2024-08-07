@@ -11,6 +11,7 @@
 #ifdef WIN32
 #include <Windows.h>
 #include <d3d11.h>
+#include <d3dcompiler.h>
 #endif
 
 #include <glad/glad.h>

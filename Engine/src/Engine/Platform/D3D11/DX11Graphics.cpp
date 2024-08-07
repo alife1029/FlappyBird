@@ -101,6 +101,16 @@ namespace Engine
 		m_Context->DrawIndexed(count, 0u, 0u);
 	}
 
+	ID3D11Device* DX11Graphics::GetDevice() const noexcept
+	{
+		return m_Device;
+	}
+
+	ID3D11DeviceContext* DX11Graphics::GetContext() const noexcept
+	{
+		return m_Context;
+	}
+
 #pragma region Exceptions
 
 	DX11Graphics::HRException::HRException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMessages)
