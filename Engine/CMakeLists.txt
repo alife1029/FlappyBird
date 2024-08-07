@@ -48,6 +48,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE	glad
 												imgui
 												dxerr
 												d3d11
+												d3dcompiler
 												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/freetype/lib/freetype.lib
 												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/openal/lib/OpenAL32.lib
 												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/sndfile/lib/sndfile.lib)

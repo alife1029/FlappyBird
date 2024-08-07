@@ -1,16 +1,15 @@
 #pragma once
 
-#include "Engine/App/Window.h"
-
 namespace Engine
 {
+	class Window;
 	class Viewport
 	{
 	public:
 		Viewport(Window* targetWindow);
 		Viewport(Window* targetWindow, int x, int y, int w, int h);
 
-		void Apply() const noexcept;
+		virtual void Bind() noexcept;
 
 		int GetX() const noexcept;
 		int GetY() const noexcept;
@@ -20,7 +19,7 @@ namespace Engine
 
 		void SetDimensions(int x, int y, int w, int h);
 
-	private:
+	protected:
 		int	m_X,
 			m_Y,
 			m_W,

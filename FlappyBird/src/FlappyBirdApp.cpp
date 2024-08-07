@@ -93,9 +93,9 @@ void FlappyBirdApp::Start()
 	m_TextShader = gfx->CreateShader("res/shaders/ui_vs.glsl", "res/shaders/text_fs.glsl");
 	m_UiImageShader = gfx->CreateShader("res/shaders/ui_vs.glsl", "res/shaders/sprite_fs.glsl");
 	m_Renderer = gfx->CreateBatchRenderer(m_Shader);
-	m_UiRenderer = gfx->CreateUIRenderer(m_TextShader, m_UiImageShader);
-	m_Viewport = new Viewport(m_Window, 0, 0, m_Window->GetWidth(), m_Window->GetHeight());
-	m_Camera = new Camera(m_Viewport);
+	m_UiRenderer = gfx->CreateUIRenderer(m_TextShader, m_UiImageShader);*/
+	m_Viewport = gfx->CreateViewport(m_Window, 0, 0, m_Window->GetWidth(), m_Window->GetHeight());
+	/*m_Camera = new Camera(m_Viewport);
 	m_Camera->zNear = 0.0f;
 
 	// Loading textures
@@ -201,10 +201,10 @@ void FlappyBirdApp::Update()
 	*/
 	m_Window->GetGfx()->EndFrame();
 	m_Window->ProcessEvents();
-	/*
+	
 	m_Viewport->SetDimensions(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
-	m_Viewport->Apply();
-	*/
+	m_Viewport->Bind();
+	
 	m_ElapsedTime += Time::Delta();
 }
 

@@ -6,6 +6,9 @@
 #include "Engine/Platform/GL/GLBatchRenderer.h"
 #include "Engine/Platform/GL/GLUIRenderer.h"
 
+#include "Engine/Platform/D3D11/DX11Viewport.h"
+#include "Engine/Platform/D3D11/DX11Shader.h"
+
 namespace Engine
 {
 	Graphics::Graphics(Window* targetWindow)
@@ -36,15 +39,40 @@ namespace Engine
 
 #pragma region Factory functions
 	
+	Viewport* Graphics::CreateViewport(Window* targetWindow) const
+	{
+		switch (m_RendererAPI)
+		{
+		case Engine::Graphics::Api::D3D11: return new DX11Viewport(targetWindow);
+		case Engine::Graphics::Api::OPENGL: return new Viewport(targetWindow);
+		default:
+			// TODO: Throw exception
+			break;
+		}
+
+		return nullptr;
+	}
+
+	Viewport* Graphics::CreateViewport(Window* targetWindow, int x, int y, int w, int h) const
+	{
+		switch (m_RendererAPI)
+		{
+		case Engine::Graphics::Api::D3D11: return new DX11Viewport(targetWindow, x, y, w, h);
+		case Engine::Graphics::Api::OPENGL: return new Viewport(targetWindow, x, y, w, h);
+		default:
+			// TODO: Throw exception
+			break;
+		}
+
+		return nullptr;
+	}
+
 	Shader* Graphics::CreateShader(const std::string& vsFile, const std::string& fsFile) const
 	{
 		switch (m_RendererAPI)
 		{
-		case Engine::Graphics::Api::D3D11:
-			// TODO: Create D3D11 Shader
-			break;
-		case Engine::Graphics::Api::OPENGL:
-			return new GLShader(vsFile, fsFile);
+		case Engine::Graphics::Api::D3D11: return new DX11Shader(vsFile, fsFile);
+		case Engine::Graphics::Api::OPENGL: return new GLShader(vsFile, fsFile);
 		default:
 			// TODO: Throw exception
 			break;

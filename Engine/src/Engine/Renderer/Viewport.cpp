@@ -1,6 +1,8 @@
 #include "engine_pch.h"
 #include "Viewport.h"
 
+#include "Engine/App/Window.h"
+
 namespace Engine
 {
 	Viewport::Viewport(Window* targetWindow)
@@ -15,13 +17,11 @@ namespace Engine
 	{
 	}
 
-	void Viewport::Apply() const noexcept
+	void Viewport::Bind() noexcept
 	{
-		// TODO: Implement Direct3D11 Viewport
-
-		switch (m_TargetWindow->GetGfx()->GetAPI())
+		if (m_TargetWindow->GetGfx()->GetAPI() == Graphics::Api::OPENGL)
 		{
-		case Graphics::Api::OPENGL: glViewport(m_X, m_Y, m_W, m_H); break;
+			glViewport(m_X, m_Y, m_W, m_H);
 		}
 	}
 

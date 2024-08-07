@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Viewport.h"
 #include "Shader.h"
 #include "Texture2D.h"
 #include "BatchRenderer.h"
@@ -27,6 +28,8 @@ namespace Engine
 
 	public:
 		// Factory methods
+		Viewport* CreateViewport(Window* targetWindow) const;
+		Viewport* CreateViewport(Window* targetWindow, int x, int y, int w, int h) const;
 		Shader* CreateShader(const std::string& vsFile, const std::string& fsFile) const;
 		Texture2D* CreateTexture2D(unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit = 100u, Texture2D::Filter filter = Texture2D::Filter::Bilinear, Texture2D::Wrap wrap = Texture2D::Wrap::Clamp) const;
 		Texture2D* CreateTexture2D(const std::string& imageFile, unsigned int pixelPerUnit = 100u, bool forceRGBA = false, Texture2D::Filter filter = Texture2D::Filter::Bilinear, Texture2D::Wrap wrap = Texture2D::Wrap::Clamp);
