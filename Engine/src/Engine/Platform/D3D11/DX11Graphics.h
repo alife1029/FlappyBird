@@ -2,6 +2,7 @@
 
 #include "Engine/Renderer/Graphics.h"
 #include "Engine/Utils/EngineException.h"
+#include "DXGIInfoManager.h"
 
 #include <Windows.h>
 #include <d3d11.h>
@@ -15,9 +16,13 @@ namespace Engine
 	public:
 		class Exception : public HrException
 		{
-			using HrException::HrException;
 		public:
+			Exception(int line, const char* file, HRESULT hr, std::vector<std::string> infoList = {});
+			virtual const char* what() const noexcept override;
 			virtual const char* GetType() const noexcept override;
+			std::string GetErrorInfo() const noexcept;
+		private:
+			std::string m_Info;
 		};
 
 		class DeviceRemovedException : public Exception
@@ -25,6 +30,8 @@ namespace Engine
 			using Exception::Exception;
 		public:
 			virtual const char* GetType() const noexcept override;
+		private:
+			std::string reason;
 		};
 
 	public:
@@ -45,5 +52,9 @@ namespace Engine
 		ID3D11DeviceContext* m_Context;
 		IDXGISwapChain* m_SwapChain;
 		ID3D11RenderTargetView* m_RenderTargetView;
+
+#ifndef NDEBUG
+		DXGIInfoManager m_InfoManager;
+#endif
 	};
 }

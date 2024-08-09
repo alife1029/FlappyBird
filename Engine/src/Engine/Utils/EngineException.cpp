@@ -153,7 +153,7 @@ namespace Engine
 	{
 		std::ostringstream oss;
 		oss << GetType() << std::endl
-			<< "[Error Code] 0x" << std::hex << GetErrorCode() << std::endl
+			<< "[Error Code] 0x" << std::hex << std::uppercase << GetErrorCode() << std::endl
 			<< "[Description] " << GetErrorDescription() << std::endl
 			<< GetOriginString();
 		m_WhatBuffer = oss.str();
