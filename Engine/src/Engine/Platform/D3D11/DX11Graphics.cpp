@@ -2,6 +2,9 @@
 #include "DX11Graphics.h"
 #include "Engine/App/Window.h"
 
+#define GFX_THROW_FAILED(hrcall) if (FAILED(hr = (hrcall))) throw DX11Graphics::Exception(__LINE__, __FILE__, hr)
+#define GFX_THROW_DEVICE_REMOVED(hr) throw DX11Graphics::DeviceRemovedException(__LINE__, __FILE__, hr)
+
 namespace Engine
 {
 	DX11Graphics::DX11Graphics(Window* targetWindow) : Graphics(targetWindow)
@@ -32,8 +35,11 @@ namespace Engine
 		deviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
+		// Create HRESULT for checking errors
+		HRESULT hr;
+		
 		// Create device and swap chain
-		HRESULT hr = D3D11CreateDeviceAndSwapChain(
+		GFX_THROW_FAILED(D3D11CreateDeviceAndSwapChain(
 			nullptr,						// Default adapter
 			D3D_DRIVER_TYPE_HARDWARE,		// Hardware driver
 			nullptr,						// No software device
@@ -45,17 +51,17 @@ namespace Engine
 			&m_Device,
 			nullptr,
 			&m_Context
-		);
+		));
 
 		if (FAILED(hr))
 			throw InitializationError(__LINE__, __FILE__, "Failed to create D3D11 Device and Swap Chain!");
 
 		// Get the address of the back buffer
 		ID3D11Texture2D* backBuffer;
-		m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer);
+		GFX_THROW_FAILED(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer));
 
 		// Use back buffer to create render target
-		m_Device->CreateRenderTargetView(backBuffer, NULL, &m_RenderTargetView);
+		GFX_THROW_FAILED(m_Device->CreateRenderTargetView(backBuffer, NULL, &m_RenderTargetView));
 		m_Context->OMSetRenderTargets(1, &m_RenderTargetView, NULL); // TODO: Set depth-stencil buffer
 
 		// Release back buffer COM pointer
@@ -79,14 +85,8 @@ namespace Engine
 		
 		if (FAILED(hr = m_SwapChain->Present(1u, 0u)))
 		{
-			if (hr == DXGI_ERROR_DEVICE_REMOVED)
-			{
-				// TODO: Throw error
-			}
-			else
-			{
-				// TODO: Throw error
-			}
+			if (hr == DXGI_ERROR_DEVICE_REMOVED) GFX_THROW_DEVICE_REMOVED(hr);
+			else GFX_THROW_FAILED(hr);
 		}
 	}
 
@@ -113,60 +113,14 @@ namespace Engine
 
 #pragma region Exceptions
 
-	DX11Graphics::HRException::HRException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMessages)
-		: EngineException(line, file), m_Hr(hr)
+	const char* DX11Graphics::Exception::GetType() const noexcept
 	{
-		for (const auto& m : infoMessages)
-		{
-			m_Info += m;
-			m_Info.push_back('\n');
-		}
-		
-		if (!m_Info.empty()) m_Info.pop_back();
+		return "Engine D3D11 Graphics Exception";
 	}
 
-	const char* DX11Graphics::HRException::what() const noexcept
+	const char* DX11Graphics::DeviceRemovedException::GetType() const noexcept
 	{
-		std::ostringstream oss;
-		oss << GetType() << std::endl
-			<< "[Error Code] 0x" << std::hex << std::uppercase << GetErrorCode()
-			<< std::dec << " (" << (unsigned long)GetErrorCode() << ")" << std::endl
-			<< "[Error String] " << GetErrorString() << std::endl
-			<< "[Description] " << GetErrorDescription() << std::endl;
-		
-		if (!m_Info.empty())
-			oss << "\n[Error Info]\n" << GetErrorInfo() << std::endl << std::endl;
-
-		oss << GetOriginString();
-
-		m_WhatBuffer = oss.str();
-		return m_WhatBuffer.c_str();
-	}
-
-	const char* DX11Graphics::HRException::GetType() const noexcept
-	{
-		return "D3D11 Graphics Error";
-	}
-
-	HRESULT DX11Graphics::HRException::GetErrorCode() const noexcept
-	{
-		return m_Hr;
-	}
-
-	std::string DX11Graphics::HRException::GetErrorString() const noexcept
-	{
-		return std::string();
-	}
-
-	std::string DX11Graphics::HRException::GetErrorDescription() const noexcept
-	{
-		
-		return std::string();
-	}
-
-	std::string DX11Graphics::HRException::GetErrorInfo() const noexcept
-	{
-		return m_Info;
+		return "Engine D3D11 Graphics Device Removed Exception";
 	}
 
 #pragma endregion

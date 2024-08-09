@@ -13,19 +13,18 @@ namespace Engine
 	class DX11Graphics : public Graphics
 	{
 	public:
-		class HRException : public EngineException
+		class Exception : public HrException
 		{
+			using HrException::HrException;
 		public:
-			HRException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMessages = {});
-			const char* what() const noexcept override;
-			const char* GetType() const noexcept override;
-			HRESULT GetErrorCode() const noexcept;
-			std::string GetErrorString() const noexcept;
-			std::string GetErrorDescription() const noexcept;
-			std::string GetErrorInfo() const noexcept;
-		private:
-			HRESULT m_Hr;
-			std::string m_Info;
+			virtual const char* GetType() const noexcept override;
+		};
+
+		class DeviceRemovedException : public Exception
+		{
+			using Exception::Exception;
+		public:
+			virtual const char* GetType() const noexcept override;
 		};
 
 	public:

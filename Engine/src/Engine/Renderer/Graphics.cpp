@@ -9,7 +9,7 @@
 #include "Engine/Platform/D3D11/DX11Viewport.h"
 #include "Engine/Platform/D3D11/DX11Shader.h"
 
-#define THROW_API_NOT_SET() throw new ApiNotSetException(__LINE__, __FILE__, this)
+#define THROW_API_NOT_SET() throw ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx())
 
 namespace Engine
 {
@@ -47,7 +47,7 @@ namespace Engine
 		{
 		case Engine::Graphics::Api::D3D11: return new DX11Viewport(targetWindow);
 		case Engine::Graphics::Api::OPENGL: return new Viewport(targetWindow);
-		default: throw new ApiNotSetException(__LINE__, __FILE__, targetWindow->GetGfx());
+		default: THROW_API_NOT_SET();
 		}
 	}
 
@@ -57,7 +57,7 @@ namespace Engine
 		{
 		case Engine::Graphics::Api::D3D11: return new DX11Viewport(targetWindow, x, y, w, h);
 		case Engine::Graphics::Api::OPENGL: return new Viewport(targetWindow, x, y, w, h);
-		default: throw new ApiNotSetException(__LINE__, __FILE__, targetWindow->GetGfx());
+		default: THROW_API_NOT_SET();
 		}
 	}
 
@@ -67,7 +67,7 @@ namespace Engine
 		{
 		case Engine::Graphics::Api::D3D11: return new DX11Shader(vsFile, fsFile);
 		case Engine::Graphics::Api::OPENGL: return new GLShader(vsFile, fsFile);
-		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
+		default: THROW_API_NOT_SET();
 		}
 	}
 
@@ -80,7 +80,7 @@ namespace Engine
 			break;
 		case Engine::Graphics::Api::OPENGL:
 			return new GLTexture2D(pixels, width, height, channelCount, pixelPerUnit, filter, wrap);
-		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
+		default: THROW_API_NOT_SET();
 		}
 	}
 
@@ -94,7 +94,7 @@ namespace Engine
 		case Engine::Graphics::Api::OPENGL:
 			return new GLTexture2D(imageFile, pixelPerUnit, forceRGBA, filter, wrap);
 			break;
-		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
+		default: THROW_API_NOT_SET();
 		}
 	}
 
@@ -107,7 +107,7 @@ namespace Engine
 			break;
 		case Engine::Graphics::Api::OPENGL:
 			return new GLBatchRenderer(shader);
-		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
+		default: THROW_API_NOT_SET();
 		}
 	}
 
@@ -120,7 +120,7 @@ namespace Engine
 			break;
 		case Engine::Graphics::Api::OPENGL:
 			return new GLUIRenderer(textShader, imageShader);
-		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
+		default: THROW_API_NOT_SET();
 		}
 	}
 
