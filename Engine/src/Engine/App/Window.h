@@ -14,23 +14,11 @@ namespace Engine
 		friend class Win32WindowClass;
 		friend class Input;
 	public:
-		class Exception : public EngineException
+		class Exception : public HrException
 		{
-			using EngineException::EngineException;
+			using HrException::HrException;
 		public:
-			static std::string TranslateErrorCode(HRESULT hr) noexcept;
-		};
-
-		class HrException : public Exception
-		{
-		public:
-			HrException(int line, const char* file, HRESULT hr) noexcept;
-			virtual const char* what() const noexcept override;
 			virtual const char* GetType() const noexcept override;
-			HRESULT	GetErrorCode() const noexcept;
-			std::string GetErrorDescription() const noexcept;
-		private:
-			HRESULT m_Hr;
 		};
 
 	public:

@@ -8,8 +8,8 @@
 #include <imgui.h>
 #include <imgui_impl_win32.h>
 
-#define	ENGINE_WND_EXCEPT(hr) Engine::Window::HrException(__LINE__, __FILE__, hr)
-#define ENGINE_WND_LASTEXCEPT() Engine::Window::HrException(__LINE__, __FILE__, GetLastError())
+#define	ENGINE_WND_EXCEPT(hr) Engine::Window::Exception(__LINE__, __FILE__, hr)
+#define ENGINE_WND_LASTEXCEPT() Engine::Window::Exception(__LINE__, __FILE__, GetLastError())
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -258,54 +258,9 @@ namespace Engine
 	}
 #pragma endregion
 
-#pragma region Window Exceptions
-
-	std::string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
+	const char* Window::Exception::GetType() const noexcept
 	{
-		char* pMsgBuf = nullptr;
-		DWORD msgLen = FormatMessage(
-			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			nullptr, hr, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), reinterpret_cast<LPSTR>(&pMsgBuf), 0, nullptr
-		);
-
-		if (msgLen == 0) return "Undefined Error Code";
-
-		std::string errorString = pMsgBuf;
-		LocalFree(pMsgBuf);
-		return errorString;
+		return "Engine Win32 Window Exception";
 	}
 
-	Window::HrException::HrException(int line, const char* file, HRESULT hr) noexcept
-		:
-		Exception(line, file), m_Hr(hr)
-	{
-	}
-
-	const char* Window::HrException::what() const noexcept
-	{
-		std::ostringstream oss;
-		oss << GetType() << std::endl
-			<< "[Error Code] " << GetErrorCode() << std::endl
-			<< "[Description] " << GetErrorDescription() << std::endl
-			<< GetOriginString();
-		m_WhatBuffer = oss.str();
-		return m_WhatBuffer.c_str();
- 	}
-
-	const char* Window::HrException::GetType() const noexcept
-	{
-		return "Win32 Window Exception";
-	}
-
-	HRESULT Window::HrException::GetErrorCode() const noexcept
-	{
-		return m_Hr;
-	}
-
-	std::string Window::HrException::GetErrorDescription() const noexcept
-	{
-		return TranslateErrorCode(m_Hr);
-	}
-
-#pragma endregion
 }

@@ -2,6 +2,7 @@
 
 #include <exception>
 #include <string>
+#include <Windows.h>
 
 namespace Engine
 {
@@ -64,5 +65,17 @@ namespace Engine
 		std::string GetErrorDetails() const noexcept;
 	private:
 		std::string m_Details;
+	};
+
+	class HrException : public EngineException
+	{
+	public:
+		HrException(int line, const char* file, HRESULT hr) noexcept;
+		virtual const char* what() const noexcept override;
+		virtual const char* GetType() const noexcept override;
+		HRESULT GetErrorCode() const noexcept;
+		std::string GetErrorDescription() const noexcept;
+	protected:
+		HRESULT m_Hr;
 	};
 }

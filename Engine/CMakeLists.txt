@@ -6,7 +6,6 @@ project(Engine VERSION 1.0.0)
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/stb)
 add_subdirectory(vendor/imgui)
-add_subdirectory(vendor/dxerr)
 
 # Source files
 file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
@@ -46,7 +45,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE	glad
 												stb
 												opengl32
 												imgui
-												dxerr
 												d3d11
 												d3dcompiler
 												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/freetype/lib/freetype.lib

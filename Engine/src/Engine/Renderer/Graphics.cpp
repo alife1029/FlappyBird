@@ -9,6 +9,8 @@
 #include "Engine/Platform/D3D11/DX11Viewport.h"
 #include "Engine/Platform/D3D11/DX11Shader.h"
 
+#define THROW_API_NOT_SET() throw new ApiNotSetException(__LINE__, __FILE__, this)
+
 namespace Engine
 {
 	Graphics::Graphics(Window* targetWindow)
@@ -45,12 +47,8 @@ namespace Engine
 		{
 		case Engine::Graphics::Api::D3D11: return new DX11Viewport(targetWindow);
 		case Engine::Graphics::Api::OPENGL: return new Viewport(targetWindow);
-		default:
-			// TODO: Throw exception
-			break;
+		default: throw new ApiNotSetException(__LINE__, __FILE__, targetWindow->GetGfx());
 		}
-
-		return nullptr;
 	}
 
 	Viewport* Graphics::CreateViewport(Window* targetWindow, int x, int y, int w, int h) const
@@ -59,12 +57,8 @@ namespace Engine
 		{
 		case Engine::Graphics::Api::D3D11: return new DX11Viewport(targetWindow, x, y, w, h);
 		case Engine::Graphics::Api::OPENGL: return new Viewport(targetWindow, x, y, w, h);
-		default:
-			// TODO: Throw exception
-			break;
+		default: throw new ApiNotSetException(__LINE__, __FILE__, targetWindow->GetGfx());
 		}
-
-		return nullptr;
 	}
 
 	Shader* Graphics::CreateShader(const std::string& vsFile, const std::string& fsFile) const
@@ -73,12 +67,8 @@ namespace Engine
 		{
 		case Engine::Graphics::Api::D3D11: return new DX11Shader(vsFile, fsFile);
 		case Engine::Graphics::Api::OPENGL: return new GLShader(vsFile, fsFile);
-		default:
-			// TODO: Throw exception
-			break;
+		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
 		}
-
-		return nullptr;
 	}
 
 	Texture2D* Graphics::CreateTexture2D(unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit, Texture2D::Filter filter, Texture2D::Wrap wrap) const
@@ -90,12 +80,8 @@ namespace Engine
 			break;
 		case Engine::Graphics::Api::OPENGL:
 			return new GLTexture2D(pixels, width, height, channelCount, pixelPerUnit, filter, wrap);
-		default:
-			// TODO: Throw exception
-			break;
+		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
 		}
-
-		return nullptr;
 	}
 
 	Texture2D* Graphics::CreateTexture2D(const std::string& imageFile, unsigned int pixelPerUnit, bool forceRGBA, Texture2D::Filter filter, Texture2D::Wrap wrap)
@@ -108,12 +94,8 @@ namespace Engine
 		case Engine::Graphics::Api::OPENGL:
 			return new GLTexture2D(imageFile, pixelPerUnit, forceRGBA, filter, wrap);
 			break;
-		default:
-			// TODO: Throw exception
-			break;
+		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
 		}
-
-		return nullptr;
 	}
 
 	BatchRenderer* Graphics::CreateBatchRenderer(Shader* shader) const
@@ -125,12 +107,8 @@ namespace Engine
 			break;
 		case Engine::Graphics::Api::OPENGL:
 			return new GLBatchRenderer(shader);
-		default:
-			// TODO: Throw error
-			break;
+		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
 		}
-
-		return nullptr;
 	}
 
 	UIRenderer* Graphics::CreateUIRenderer(Shader* textShader, Shader* imageShader) const
@@ -142,12 +120,46 @@ namespace Engine
 			break;
 		case Engine::Graphics::Api::OPENGL:
 			return new GLUIRenderer(textShader, imageShader);
-		default:
-			// TODO: Throw error
-			break;
+		default: throw new ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx());
 		}
+	}
 
-		return nullptr;
+#pragma endregion
+
+#pragma region Exceptions
+
+	Graphics::ApiNotSetException::ApiNotSetException(int line, const char* file, Graphics* gfxInstance) noexcept
+		:
+		EngineException(line, file), m_Gfx(gfxInstance)
+	{
+	}
+
+	const char* Graphics::ApiNotSetException::what() const noexcept
+	{
+		Api api = m_Gfx->GetAPI();
+		std::string apistr = api == Api::D3D11 ? "D3D11" : api == Api::OPENGL ? "OpenGL" : api == Api::NONE ? "None" : "NULL";
+
+		std::ostringstream oss;
+		oss << GetType() << std::endl << std::endl
+			<< "[Graphics Object]" << std::endl
+			<< "	[Selected API] " << apistr << std::endl
+			<< "	[Target Window]" << std::endl
+			<< "		[Title] " << m_Gfx->m_TargetWindow->GetTitle() << std::endl
+			<< "		[Dimension] " << m_Gfx->m_TargetWindow->GetWidth() << "x" << m_Gfx->m_TargetWindow->GetHeight() << std::endl << std::endl
+			<< GetOriginString();
+
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+
+	const char* Graphics::ApiNotSetException::GetType() const noexcept
+	{
+		return "Renderer API Not Set";
+	}
+
+	Graphics* Graphics::ApiNotSetException::GetGraphicsObject() const noexcept
+	{
+		return m_Gfx;
 	}
 
 #pragma endregion

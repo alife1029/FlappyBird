@@ -5,6 +5,7 @@
 #include "Texture2D.h"
 #include "BatchRenderer.h"
 #include "UI/UIRenderer.h"
+#include "Engine/Utils/EngineException.h"
 
 namespace Engine
 {
@@ -14,6 +15,17 @@ namespace Engine
 	{
 	public:
 		enum class Api { D3D11, OPENGL, NONE };
+	public:
+		class ApiNotSetException : public EngineException
+		{
+		public:
+			ApiNotSetException(int line, const char* file, Graphics* gfxInstance) noexcept;
+			const char* what() const noexcept override;
+			const char* GetType() const noexcept override;
+			Graphics* GetGraphicsObject() const noexcept;
+		private:
+			Graphics* m_Gfx;
+		};
 	public:
 		Graphics(Window* targetWindow);
 		Graphics(const Graphics&) = delete;
