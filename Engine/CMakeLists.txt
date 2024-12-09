@@ -1,11 +1,26 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.30)
 
 project(Engine VERSION 1.0.0)
+
+set(ENIGNE_DEPS)
 
 # Libraries
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/stb)
 add_subdirectory(vendor/imgui)
+list(APPEND ENGINE_DEPS glad stb opengl32 imgui)
+if (WIN32)
+	file (GLOB ENGINE_PLATFORM_SOURCES	src/Engine/Platform/Win32/**.h
+										src/Engine/Platform/Win32/**.cpp)
+	list(APPEND ENGINE_DEPS	${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/freetype/lib/freetype.lib
+							${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/openal/lib/OpenAL32.lib
+							${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/sndfile/lib/sndfile.lib)
+elseif (UNIX)
+	file (GLOB ENGINE_PLATFORM_SOURCES	src/Engine/Platform/Linux/**.h
+										src/Engine/Platform/Linux/**.cpp)
+	find_package(glfw3 3.4 REQUIRED)
+	list(APPEND ENGINE_DEPS glfw)
+endif()
 
 # Source files
 file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
@@ -37,15 +52,16 @@ target_link_directories(${PROJECT_NAME} PRIVATE	vendor/freetype/lib
 												vendor/openal/lib
 												vendor/sndfile/lib)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE	glad 
-												stb
-												opengl32
-												imgui
-												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/freetype/lib/freetype.lib
-												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/openal/lib/OpenAL32.lib
-												${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/sndfile/lib/sndfile.lib)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${ENGINE_DEPS})
 												
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/engine_pch.h)
+
+# Preprocessor macro predefinitios
+if (WIN32)
+	target_compile_definitions(${PROJECT_NAME} PUBLIC -DENGINE_PLATFORM_WINDOWS)
+elseif (UNIX)
+	target_compile_definitions(${PROJECT_NAME} PUBLIC -DENGINE_PLATFORM_UNIX)
+endif()
 
 # Post Build Commands
 add_custom_command(	TARGET ${PROJECT_NAME} POST_BUILD

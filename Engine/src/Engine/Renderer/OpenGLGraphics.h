@@ -2,7 +2,9 @@
 
 #include "Engine/Utils/EngineException.h"
 
+#ifdef ENGINE_PLATFORM_WINDOWS	
 #include <Windows.h>
+#endif
 
 namespace Engine
 {
@@ -30,8 +32,10 @@ namespace Engine
 		void DrawIndexed(unsigned int count);
 
 	private:
+#ifdef ENGINE_PLATFORM_WINDOWS	
 		HGLRC	m_Context;
 		HDC		m_Device;
+#endif
 		Window*	m_TargetWindow;
 	};
 }

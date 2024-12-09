@@ -8,10 +8,14 @@
 #include <regex>
 #include <map>
 
-#include <Windows.h>
-
 #include <glad/glad.h>
+
+#ifdef ENGINE_PLATFORM_WINDOWS
+#include <Windows.h>
 #include <glad/glad_wgl.h>
+#elif ENGINE_PLATFORM_UNIX
+#include <GLFW/glfw3.h>
+#endif
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

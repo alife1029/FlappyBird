@@ -5,6 +5,10 @@
 #define INIT_ERROR(_desc_) InitializationError(__LINE__, __FILE__, _desc_)
 #define FBSWPERR() FramebufferSwapError(__LINE__, __FILE__)
 
+#ifdef ENGINE_PLATFORM_UNIX
+#include "Engine/Platform/Linux/GLFWWindow.h"
+#endif
+
 namespace Engine
 {
 #pragma region OpenGL Graphics
@@ -15,6 +19,8 @@ namespace Engine
 		:
 		m_TargetWindow(targetWindow)
 	{
+#ifdef ENGINE_PLATFORM_WINDOWS
+
 		PIXELFORMATDESCRIPTOR pfd = {
 			sizeof(PIXELFORMATDESCRIPTOR),
 			1,
@@ -54,11 +60,27 @@ namespace Engine
 			throw INIT_ERROR("Failed to load WGL extensions!");
 		}
 
-		// Initial viewport
-		glViewport(0, 0, targetWindow->GetWidth(), targetWindow->GetHeight());
-
 		// Enable V-Sync
 		wglSwapIntervalEXT(1);
+
+#elif defined(ENGINE_PLATFORM_UNIX)
+
+		// Make context current
+		glfwMakeContextCurrent(reinterpret_cast<GLFWWindow*>(targetWindow)->GetGLFWwindow());
+
+		// Load OpenGL
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			throw INIT_ERROR("Failed to load OpenGL functions!");
+		}
+
+		// Enable V-Sync
+		glfwSwapInterval(1);
+
+#endif
+
+		// Initial viewport
+		glViewport(0, 0, targetWindow->GetWidth(), targetWindow->GetHeight());
 
 		// Enable alpha blending
 		glEnable(GL_BLEND);
@@ -72,17 +94,23 @@ namespace Engine
 
 	OpenGLGraphics::~OpenGLGraphics()
 	{
+#ifdef ENGINE_PLATFORM_WINDOWS
 		wglMakeCurrent(nullptr, nullptr);
 		wglDeleteContext(m_Context);
 		ReleaseDC(m_TargetWindow->GetHWND(), m_Device);
+#endif
 	}
 
 	void OpenGLGraphics::EndFrame()
 	{
+#ifdef ENGINE_PLATFORM_WINDOWS
 		if (SwapBuffers(m_Device) == FALSE)
 		{
 			throw FBSWPERR();
 		}
+#elif defined(ENGINE_PLATFORM_UNIX)
+		glfwSwapBuffers(reinterpret_cast<GLFWWindow*>(m_TargetWindow)->GetGLFWwindow());
+#endif
 	}
 
 	void OpenGLGraphics::ClearBuffer(float red, float green, float blue, float alpha) noexcept
