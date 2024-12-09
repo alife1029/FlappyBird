@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.30)
 
 project(FlappyBird VERSION 1.0.0)
 
+set(FLAPPY_DEPS Engine imgui)
+if(WIN32)
+	list(APPEND FLAPPY_DEPS opengl32)
+endif()
+
 file(GLOB FLAPPY_PROJECT_SOURCES	src/**.h
 									src/**.cpp
 									src/**.rc)
@@ -11,7 +16,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE	../Engine/src
 													../Engine/vendor/glm
 													../Engine/vendor/imgui
 													../Engine/vendor/openal/include)
-target_link_libraries(${PROJECT_NAME} PRIVATE Engine opengl32)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${FLAPPY_DEPS})
 
 # Post Build Commands
 add_custom_command(	TARGET ${PROJECT_NAME} POST_BUILD

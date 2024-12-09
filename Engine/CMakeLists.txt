@@ -8,11 +8,12 @@ set(ENIGNE_DEPS)
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/stb)
 add_subdirectory(vendor/imgui)
-list(APPEND ENGINE_DEPS glad stb opengl32 imgui)
+list(APPEND ENGINE_DEPS glad stb imgui)
 if (WIN32)
 	file (GLOB ENGINE_PLATFORM_SOURCES	src/Engine/Platform/Win32/**.h
 										src/Engine/Platform/Win32/**.cpp)
-	list(APPEND ENGINE_DEPS	${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/freetype/lib/freetype.lib
+	list(APPEND ENGINE_DEPS	opengl32
+							${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/freetype/lib/freetype.lib
 							${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/openal/lib/OpenAL32.lib
 							${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/sndfile/lib/sndfile.lib)
 elseif (UNIX)
@@ -20,7 +21,9 @@ elseif (UNIX)
 										src/Engine/Platform/Linux/**.cpp)
 	find_package(glfw3 3.4 REQUIRED)
 	find_package(OpenAL REQUIRED)
-	list(APPEND ENGINE_DEPS glfw OpenAL)
+	find_package(Freetype REQUIRED)
+	find_package(SndFile REQUIRED)
+	list(APPEND ENGINE_DEPS glfw OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
 endif()
 
 # Source files

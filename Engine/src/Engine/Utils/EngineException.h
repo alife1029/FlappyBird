@@ -23,6 +23,7 @@ namespace Engine
 		mutable std::string m_WhatBuffer;
 	};
 
+#ifdef ENGINE_PLATFORM_WINDOWS
 	class EngineWException : public std::exception
 	{
 	public:
@@ -41,6 +42,7 @@ namespace Engine
 	protected:
 		mutable std::wstring m_WhatBuffer;
 	};
+#endif
 
 	class ResourceNotFoundException : public EngineException
 	{

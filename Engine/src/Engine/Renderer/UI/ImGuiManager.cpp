@@ -1,7 +1,11 @@
 #include "ImGuiManager.h"
 
 #include <imgui.h>
+#ifdef ENGINE_PLATFORM_WINDOWS
 #include <imgui_impl_win32.h>
+#elif defined(ENGINE_PLATFORM_UNIX)
+#include <imgui_impl_glfw.h>
+#endif
 #include <imgui_impl_opengl3.h>
 
 namespace Engine
@@ -12,21 +16,33 @@ namespace Engine
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		ImGui::StyleColorsDark();
-		ImGui_ImplWin32_InitForOpenGL((void*)window->GetHWND());	
+#ifdef ENGINE_PLATFORM_WINDOWS
+		ImGui_ImplWin32_InitForOpenGL((void*)window->GetHWND());
+#elif defined(ENGINE_PLATFORM_UNIX)
+		ImGui_ImplGlfw_InitForOpenGL(reinterpret_cast<GLFWwindow*>(window), true);
+#endif
 		ImGui_ImplOpenGL3_Init("#version 450");
 	}
 
 	void ImGuiManager::Shutdown()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
+#ifdef ENGINE_PLATFORM_WINDOWS
 		ImGui_ImplWin32_Shutdown();
+#elif defined(ENGINE_PLATFORM_UNIX)
+		ImGui_ImplGlfw_Shutdown();
+#endif
 		ImGui::DestroyContext();
 	}
 
 	void ImGuiManager::NewFrame()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
+#ifdef ENGINE_PLATFORM_WINDOWS
 		ImGui_ImplWin32_NewFrame();
+#elif defined(ENGINE_PLATFORM_UNIX)
+		ImGui_ImplGlfw_NewFrame();
+#endif
 		ImGui::NewFrame();
 	}
 	

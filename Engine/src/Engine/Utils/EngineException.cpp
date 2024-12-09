@@ -42,7 +42,7 @@ namespace Engine
 #pragma endregion
 
 #pragma region EngineWException
-
+#ifdef ENGINE_PLATFORM_WINDOWS
 	EngineWException::EngineWException(int line, const wchar_t* file) noexcept
 		:
 		m_Line(line), m_File(file)
@@ -83,7 +83,7 @@ namespace Engine
 			<< L"[Line] " << m_Line;
 		return wos.str();
 	}
-
+#endif
 #pragma endregion
 
 #pragma region ResourceNotFoundException
