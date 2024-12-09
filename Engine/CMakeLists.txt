@@ -39,7 +39,8 @@ file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
 									src/Engine/Utils/**.h
 									src/Engine/Utils/**.cpp
 									src/Engine/Input/**.h
-									src/Engine/Input/**.cpp)
+									src/Engine/Input/**.cpp
+									${ENGINE_PLATFORM_SOURCES})
 
 add_library(${PROJECT_NAME} ${ENGINE_PROJECT_SOURCES})
 
