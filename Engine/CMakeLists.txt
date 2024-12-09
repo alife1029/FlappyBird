@@ -19,7 +19,8 @@ elseif (UNIX)
 	file (GLOB ENGINE_PLATFORM_SOURCES	src/Engine/Platform/Linux/**.h
 										src/Engine/Platform/Linux/**.cpp)
 	find_package(glfw3 3.4 REQUIRED)
-	list(APPEND ENGINE_DEPS glfw)
+	find_package(OpenAL REQUIRED)
+	list(APPEND ENGINE_DEPS glfw OpenAL)
 endif()
 
 # Source files
@@ -39,14 +40,21 @@ file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
 
 add_library(${PROJECT_NAME} ${ENGINE_PROJECT_SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE	vendor/glad/include
-													vendor/stb/include
-													vendor/glm
-													vendor/freetype/include
-													vendor/imgui
-													vendor/openal/include
-													vendor/sndfile/include
-													src/)
+set(ENGINE_INCLUDE_DIRS	vendor/glad/include
+						vendor/stb/include
+						vendor/glm
+						vendor/imgui
+						vendor/sndfile/include
+						src/)
+
+if (WIN32)
+	list(APPEND ENGINE_INCLUDE_DIRS	vendor/freetype/include
+									vendor/openal/include)
+elseif (UNIX)
+	list(APPEND ENGINE_INCLUDE_DIRS	/usr/include/freetype2)
+endif()
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${ENGINE_INCLUDE_DIRS})
 
 target_link_directories(${PROJECT_NAME} PRIVATE	vendor/freetype/lib
 												vendor/openal/lib

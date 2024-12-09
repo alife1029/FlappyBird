@@ -3,19 +3,19 @@
 	"editor.indentSize": "tabSize",
 	"C_Cpp.default.includePath": [
 		"Engine/src",
-		"Engine/vendor/freetype/include",
 		"Engine/vendor/glad/include",
 		"Engine/vendor/glm",
 		"Engine/vendor/imgui",
-		"Engine/vendor/openal/include",
 		"Engine/vendor/sndfile/include",
 		"Engine/vendor/stb/include",
+		"Engine/vendor/freetype/include",
 	],
 	"C_Cpp.default.defines": [
 		"ENGINE_PLATFORM_UNIX"
 	],
 	"files.associations": {
 		"cstdint": "cpp",
-		"cstdlib": "cpp"
+		"cstdlib": "cpp",
+		"chrono": "cpp"
 	}
 }
