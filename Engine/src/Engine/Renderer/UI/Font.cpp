@@ -70,7 +70,7 @@ namespace Engine
 				m_FontSize = _c.GlyphSize.y;
 		}
 
-		glBindTexture(GL_TEXTURE_2D, NULL);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// Cleanup
 		FT_Done_Face(fontFace);

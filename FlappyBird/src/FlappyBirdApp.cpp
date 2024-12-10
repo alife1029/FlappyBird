@@ -28,7 +28,7 @@ FlappyBirdApp::FlappyBirdApp()
 FlappyBirdApp::~FlappyBirdApp()
 {
 	// Shutdown ImGui
-	ImGuiManager::Shutdown();
+	//ImGuiManager::Shutdown();
 
 	// Delete game objects
 	delete m_Bg;
@@ -79,7 +79,7 @@ void FlappyBirdApp::Start()
 	m_Window->CreateGraphicsContext();
 
 	// Initialize ImGui
-	ImGuiManager::Initialize(m_Window);
+	//ImGuiManager::Initialize(m_Window);
 
 	// Create rendering components
 	m_Shader = new Shader("res/shaders/sprite_vs.glsl", "res/shaders/sprite_fs.glsl");
@@ -268,7 +268,7 @@ void FlappyBirdApp::RenderUI()
 		if (m_FirstLaunched)
 		{
 			m_UiRenderer->DrawImage(m_CharacterTextures[static_cast<int>(m_ElapsedTime * 5) % 3], { 0.0f, 48.0f }, { 160.0f, 128.0f });
-			m_UiRenderer->DrawTxt(m_PixelifySans, "Ali Efe GÜR", { 4.0, 4.0 }, Anchor::BottomLeft, 16.0f, { 0.25f, 0.25f, 0.25f, 0.8f });
+			m_UiRenderer->DrawTxt(m_PixelifySans, "Ali Efe Gï¿½R", { 4.0, 4.0 }, Anchor::BottomLeft, 16.0f, { 0.25f, 0.25f, 0.25f, 0.8f });
 			m_UiRenderer->DrawTxt(m_PixelifySans, "v1.0.0", { 4.0, 4.0 }, Anchor::BottomRight, 12.0f, { 0.25f, 0.25f, 0.25f, 0.8f });
 			m_UiRenderer->DrawTxt(m_PixelifySans, "Press ENTER to Start Game", { 0.0f, -96.0f }, Anchor::MiddleCenter, 20.0f, { 0.05f, 0.05f, 0.05f, abs(sinf(m_ElapsedTime * 1.75f)) * 0.8f + 0.2f });
 		}
@@ -289,10 +289,10 @@ void FlappyBirdApp::RenderUI()
 
 void FlappyBirdApp::RenderImGui()
 {
-	ImGuiManager::NewFrame();
-	ImGui::Begin("Rendering Stats");
+	//ImGuiManager::NewFrame();
+	//ImGui::Begin("Rendering Stats");
 
-	ImGui::Text("FPS: %g (%g ms)", 1.0f / Time::Delta(), 1000.0f * Time::Delta());
+	//ImGui::Text("FPS: %g (%g ms)", 1.0f / Time::Delta(), 1000.0f * Time::Delta());
 
 	// Update FPS plot
 	for (int i = 1; i < std::size(m_FpsHistory); i++)
@@ -300,14 +300,14 @@ void FlappyBirdApp::RenderImGui()
 		m_FpsHistory[i - 1] = m_FpsHistory[i];
 	}
 	m_FpsHistory[std::size(m_FpsHistory) - 1] = 1.0f / Time::Delta();
-	ImGui::PlotLines("FPS", m_FpsHistory, (int)std::size(m_FpsHistory));
+	//ImGui::PlotLines("FPS", m_FpsHistory, (int)std::size(m_FpsHistory));
 
-	ImGui::Text("Batch Count: %llu", RendererStats::GetBatchCount());
-	ImGui::Text("Vertex Count: %llu", RendererStats::GetVertexCount());
-	ImGui::Text("Traingle Count: %llu", RendererStats::GetTriangleCount());
+	//ImGui::Text("Batch Count: %zu", RendererStats::GetBatchCount());
+	//ImGui::Text("Vertex Count: %zu", RendererStats::GetVertexCount());
+	//ImGui::Text("Traingle Count: %zu", RendererStats::GetTriangleCount());
 
-	ImGui::End();
-	ImGuiManager::EndFrame();
+	//ImGui::End();
+	//ImGuiManager::EndFrame();
 }
 
 void FlappyBirdApp::OnBirdBetweenPipes(bool isCollide)

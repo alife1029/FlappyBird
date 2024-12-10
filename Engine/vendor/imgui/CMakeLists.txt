@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(imgui VERSION 4.6)
+project(imgui VERSION 1.91.5)
 
 set(IMGUI_SOURCES	imgui.cpp
 					imgui_demo.cpp 

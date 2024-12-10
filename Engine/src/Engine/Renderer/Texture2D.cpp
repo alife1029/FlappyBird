@@ -105,14 +105,14 @@ namespace Engine
 	void Texture2D::GenerateTextureFromBytes(unsigned char* pixels, int w, int h, int ch, Filter f, Wrap wrp)
 	{
 		constexpr GLint imgFormats[] = { GL_RED, GL_RG, GL_RGB, GL_RGBA };
-		GLint imgFormat = NULL;
+		GLint imgFormat = 0;
 
 		if (ch >= 1 && ch <= 4) imgFormat = imgFormats[ch - 1];
 		else std::cout << "Unsupported image format! (" << ch << " channels)" << std::endl;	// TODO: Throw an exception
 
 		glGenTextures(1, &m_TextureID);
 		Bind();
-		glTexImage2D(GL_TEXTURE_2D, 0, imgFormat, w, h, NULL, imgFormat, GL_UNSIGNED_BYTE, pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, imgFormat, w, h, 0, imgFormat, GL_UNSIGNED_BYTE, pixels);
 		ChangeFilterMode(f);
 		ChangeWrapMode(wrp);
 		glGenerateMipmap(GL_TEXTURE_2D);

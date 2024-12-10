@@ -1,9 +1,11 @@
+#include "engine_pch.h"
 #include "ImGuiManager.h"
 
 #include <imgui.h>
 #ifdef ENGINE_PLATFORM_WINDOWS
 #include <imgui_impl_win32.h>
 #elif defined(ENGINE_PLATFORM_UNIX)
+#include "Engine/Platform/Linux/GLFWWindow.h"
 #include <imgui_impl_glfw.h>
 #endif
 #include <imgui_impl_opengl3.h>
@@ -19,7 +21,7 @@ namespace Engine
 #ifdef ENGINE_PLATFORM_WINDOWS
 		ImGui_ImplWin32_InitForOpenGL((void*)window->GetHWND());
 #elif defined(ENGINE_PLATFORM_UNIX)
-		ImGui_ImplGlfw_InitForOpenGL(reinterpret_cast<GLFWwindow*>(window), true);
+		ImGui_ImplGlfw_InitForOpenGL(((GLFWWindow*)(window))->GetGLFWwindow(), false);
 #endif
 		ImGui_ImplOpenGL3_Init("#version 450");
 	}

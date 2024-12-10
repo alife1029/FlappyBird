@@ -32,6 +32,7 @@ namespace Engine
 		void DrawIndexed(unsigned int count);
 
 	private:
+		static int m_MaxTextures;
 #ifdef ENGINE_PLATFORM_WINDOWS	
 		HGLRC	m_Context;
 		HDC		m_Device;
