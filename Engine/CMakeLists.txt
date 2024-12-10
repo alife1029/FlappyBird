@@ -26,7 +26,7 @@ file (GLOB ENGINE_PROJECT_SOURCES	src/**.h
 									src/Engine/Platform/D3D11/**.h
 									src/Engine/Platform/D3D11/**.cpp)
 
-add_library(${PROJECT_NAME} ${ENGINE_PROJECT_SOURCES})
+add_library(${PROJECT_NAME} ${ENGINE_PROJECT_SOURCES} "src/Engine/Platform/D3D11/DX11Texture2D.cpp")
 
 target_include_directories(${PROJECT_NAME} PRIVATE	vendor/glad/include
 													vendor/stb/include

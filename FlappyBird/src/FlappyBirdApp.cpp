@@ -37,14 +37,14 @@ FlappyBirdApp::~FlappyBirdApp()
 	delete m_Bird;
 	for (auto p : m_Pipes) delete p;
 	m_Pipes = {};
-
+	*/
 	// Delete textures
 	for (auto charTex : m_CharacterTextures) delete charTex;
 	m_CharacterTextures = {};
 	delete m_BackgroundTexture;
 	delete m_PipeTexture;
 	delete m_WhiteTexture;
-
+	/*
 	// Delete fonts
 	delete m_PixelifySans;
 
@@ -97,7 +97,7 @@ void FlappyBirdApp::Start()
 	m_Viewport = gfx->CreateViewport(m_Window, 0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	/*m_Camera = new Camera(m_Viewport);
 	m_Camera->zNear = 0.0f;
-
+	*/
 	// Loading textures
 	m_BackgroundTexture = gfx->CreateTexture2D("res/sprites/background-day.png");
 	m_PipeTexture = gfx->CreateTexture2D("res/sprites/pipe-green.png");
@@ -107,7 +107,7 @@ void FlappyBirdApp::Start()
 		gfx->CreateTexture2D("res/sprites/yellowbird-upflap.png", 100u, false, Texture2D::Filter::Point),
 	};
 	m_WhiteTexture = Texture2D::LoadWhiteTexture();
-
+	/*
 	// Loading fonts
 	m_PixelifySans = new Font("res/fonts/PixelifySans.ttf", 128u, Texture2D::Filter::Point);
 	m_Righteous = new Font("res/fonts/Righteous.ttf", 128u);

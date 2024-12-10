@@ -8,6 +8,7 @@
 
 #include "Engine/Platform/D3D11/DX11Viewport.h"
 #include "Engine/Platform/D3D11/DX11Shader.h"
+#include "Engine/Platform/D3D11/DX11Texture2D.h"
 
 #define THROW_API_NOT_SET() throw ApiNotSetException(__LINE__, __FILE__, m_TargetWindow->GetGfx())
 
@@ -76,8 +77,7 @@ namespace Engine
 		switch (m_RendererAPI)
 		{
 		case Engine::Graphics::Api::D3D11:
-			// TODO: Create D3D11 Texture 2D
-			break;
+			return new DX11Texture2D(pixels, width, height, channelCount, pixelPerUnit, filter, wrap);
 		case Engine::Graphics::Api::OPENGL:
 			return new GLTexture2D(pixels, width, height, channelCount, pixelPerUnit, filter, wrap);
 		default: THROW_API_NOT_SET();
@@ -89,11 +89,9 @@ namespace Engine
 		switch (m_RendererAPI)
 		{
 		case Engine::Graphics::Api::D3D11:
-			// TODO: Create D3D11 Texture 2D
-			break;
+			return new DX11Texture2D(imageFile, pixelPerUnit, forceRGBA, filter, wrap);
 		case Engine::Graphics::Api::OPENGL:
 			return new GLTexture2D(imageFile, pixelPerUnit, forceRGBA, filter, wrap);
-			break;
 		default: THROW_API_NOT_SET();
 		}
 	}
