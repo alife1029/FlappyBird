@@ -18,6 +18,9 @@ namespace Engine
 		Window* GetWindow() const noexcept;
 
 	protected:
+		Window* CreateWindow(int width, int height, const std::string& title, bool fullScreen);
+
+	protected:
 		Window* m_Window;
 	};
 }

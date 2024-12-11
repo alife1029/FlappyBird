@@ -40,7 +40,6 @@ namespace Engine
 
 	int AppManager::GetReturnValue()
 	{
-		assert(!s_IsRunning);
 		return s_ReturnValue;
 	}
 }

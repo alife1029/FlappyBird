@@ -20,6 +20,7 @@ namespace Engine
 		sndFile = sf_open(audioFile.c_str(), SFM_READ, &sfInfo);
 		if (!sndFile)
 		{
+			std::cout << "[sndfileerror] " << sf_strerror(nullptr) << std::endl;
 			throw ResourceNotFoundException(__LINE__, __FILE__, audioFile.c_str());
 		}
 

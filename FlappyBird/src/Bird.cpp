@@ -8,7 +8,7 @@ Bird::Bird(Texture2D** textures)
 	m_Rotation(0.0f), m_Velocity({0.0f})
 {
 	m_AudioSource = new AudioSource();
-	m_WingSfx = new AudioClip("res/audio/wing.ogg");
+	m_WingSfx = new AudioClip("res/audio/wing.wav");
 }
 
 Bird::~Bird()

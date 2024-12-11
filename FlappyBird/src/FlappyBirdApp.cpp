@@ -11,7 +11,7 @@ FlappyBirdApp::FlappyBirdApp()
 	m_Bird(nullptr), m_PipeTexture(nullptr), m_PixelifySans(nullptr), m_Righteous(nullptr), m_UiRenderer(nullptr), m_TextShader(nullptr),
 	m_UiImageShader(nullptr)
 {
-	m_Window = new Window(800, 600, "Flappy Bird", false);
+	m_Window = CreateWindow(800, 600, "Flappy Bird", false);
 
 	// Read high score
 	try
@@ -116,10 +116,10 @@ void FlappyBirdApp::Start()
 	m_ThemeAudioSource->SetLoop(true);
 
 	// Load sound effects
-	m_DieSfx = new AudioClip("res/audio/die.ogg");
-	m_PointSfx = new AudioClip("res/audio/point.ogg");
-	m_SwooshSfx = new AudioClip("res/audio/swoosh.ogg");
-	m_ThemeSong = new AudioClip("res/audio/theme.mp3");
+	m_DieSfx = new AudioClip("res/audio/die.wav");
+	m_PointSfx = new AudioClip("res/audio/point.wav");
+	m_SwooshSfx = new AudioClip("res/audio/swoosh.wav");
+	m_ThemeSong = new AudioClip("res/audio/theme.wav");
 
 	// Create game objects
 	m_Bg = new Background(m_BackgroundTexture, { -0.3f, 0.0f, 0.0f });
